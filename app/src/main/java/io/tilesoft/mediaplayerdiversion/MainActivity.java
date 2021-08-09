@@ -6,11 +6,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.view.MenuItem;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
@@ -48,5 +53,20 @@ public class MainActivity extends AppCompatActivity {
         MediaController mediaController = new MediaController(this);
         player = new Player(this, videoView, mediaController);
         player.newInstanceFromVideoView(this);
+    }
+
+    public void FilesChooser_OnClick(MenuItem item) {
+        String title = getResources().getString(R.string.filechooser_string);
+
+        Uri externalPath = Uri.parse(Environment.getExternalStorageDirectory().getPath());
+
+        Intent chooser = new Intent(Intent.ACTION_GET_CONTENT);
+        chooser.setType("*/*");
+
+        Intent i = Intent.createChooser(chooser, title);
+
+        try {
+            startActivityForResult(i, 1);
+        }catch(ActivityNotFoundException start_ac_ex) {}
     }
 }
