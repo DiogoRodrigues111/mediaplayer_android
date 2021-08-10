@@ -9,7 +9,6 @@ import android.Manifest;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -25,48 +24,55 @@ import io.tilesoft.mediaplayerdiversion.VideoPlayer.Player;
 
 public class MainActivity extends AppCompatActivity {
 
-    private String[] PERMISSIONS = new String[] {
-            Manifest.permission.READ_EXTERNAL_STORAGE
-    };
-    private final int REQUEST_CODES = 1;
+  private String[] PERMISSIONS = new String[]{
+          Manifest.permission.READ_EXTERNAL_STORAGE
+  };
+  private final int REQUEST_CODES = 1;
 
-    private Player player;
+  private Player player;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(MainActivity.this,
-                    Manifest.permission.READ_EXTERNAL_STORAGE) !=
-                    PackageManager.PERMISSION_GRANTED)
-            {
-                if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                }
-
-                requestPermissions(PERMISSIONS, REQUEST_CODES);
-            }
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      if (ContextCompat.checkSelfPermission(MainActivity.this,
+              Manifest.permission.READ_EXTERNAL_STORAGE) !=
+              PackageManager.PERMISSION_GRANTED) {
+        if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
         }
 
-        VideoView videoView = (VideoView)findViewById(R.id.video_view_main);
-        MediaController mediaController = new MediaController(this);
-        player = new Player(this, videoView, mediaController);
-        player.newInstanceFromVideoView(this);
+        requestPermissions(PERMISSIONS, REQUEST_CODES);
+      }
     }
 
-    public void FilesChooser_OnClick(MenuItem item) {
-        String title = getResources().getString(R.string.filechooser_string);
+    // Initialize player
+    VideoView videoView = (VideoView) findViewById(R.id.video_view_main);
+    MediaController mediaController = new MediaController(this);
+    player = new Player(this, videoView, mediaController);
+    player.newInstanceFromVideoView(this);
+  }
 
-        Uri externalPath = Uri.parse(Environment.getExternalStorageDirectory().getPath());
+  /**
+   * Open external sdcard filesystem
+   * <b>You can see in <i>nav_menu.xml</i></b>
+   *
+   * @param item
+   */
+  public void FilesChooser_OnClick(MenuItem item) {
+    String title = getResources().getString(R.string.filechooser_string);
 
-        Intent chooser = new Intent(Intent.ACTION_GET_CONTENT);
-        chooser.setType("*/*");
+    Uri externalPath = Uri.parse(Environment.getExternalStorageDirectory().getPath());
 
-        Intent i = Intent.createChooser(chooser, title);
+    Intent chooser = new Intent(Intent.ACTION_GET_CONTENT);
+    chooser.setType("*/*");
 
-        try {
-            startActivityForResult(i, 1);
-        }catch(ActivityNotFoundException start_ac_ex) {}
+    Intent i = Intent.createChooser(chooser, title);
+
+    try {
+      startActivityForResult(i, 1);
+    } catch (ActivityNotFoundException start_ac_ex) {
     }
+  }
 }
