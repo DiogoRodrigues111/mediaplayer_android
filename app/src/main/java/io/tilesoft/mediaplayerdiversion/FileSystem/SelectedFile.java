@@ -1,95 +1,115 @@
+/**
+ *    Copyright (C) 2020  Diogo Rodrigues Roessler
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+/**
+ * DONT NOT DO CHANGE
+ */
+
 package io.tilesoft.mediaplayerdiversion.FileSystem;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 
 import java.io.File;
-import java.io.FileInputStream;
 
 import io.tilesoft.mediaplayerdiversion.VideoPlayer.Player;
 
 public class SelectedFile implements SelectedFileIntface {
 
-  private transient boolean canPlayFile;
+  public static ContentResolver contentResolver;
 
-  /**
+  /**============================================================================
    * Check if file is selected and then send to <b>makeOpenFile</b>
+   *
    * @param context self
-   * @param intent file
+   * @param intent  file
    */
   @Override
-  public void checkIfSelectedFileInChooser(Context context, Intent intent) {
-    intent = new Intent(Intent.ACTION_GET_CONTENT);
-
-    for(File selectorFile : Environment.getExternalStorageDirectory().listFiles()) {
+  public void checkIfSelectedFileInChooser(
+          @NonNull Context context,
+          @NonNull Intent intent)
+  {
+    try {
       Uri filePath = Uri.fromFile(
-              new File(Environment.getExternalStorageDirectory().getPath() + selectorFile));
+              new File(Environment.getExternalStorageDirectory().getPath()));
 
-      if(!selectorFile.isFile()) errorMessage(
-              context.getApplicationContext(),
-              "Failed is not file", "Warning this is not a file \n please select an file");
+      contentResolver.openInputStream(filePath);
 
-      try {
-        FileInputStream readerFile = new FileInputStream(filePath.getPath());
-        readerFile.read();
-
-        if(!readerFile.getChannel().isOpen()) errorMessage(
-                context.getApplicationContext(),
-                "Failed file is not opened", "Error to open");
-
-        if(readerFile.read() != 0) canPlayFile = true;
       } catch(Exception fileNotFound_ex) {
         errorMessage(
                 context.getApplicationContext(),
                 "EXCEPTION FAILED", fileNotFound_ex.getMessage());
       }
-    }
   }
 
-  /**
+  /**============================================================================
    * Make serialize file
+   *
    * @param context self
-   * @param intent file
-   * @param uri path
+   * @param intent  file
+   * @param uri     path
    */
   @Override
-  public void makeOpenFile(Context context, Intent intent, Uri uri) {
-
+  public void makeOpenFile(@NonNull Context context, @NonNull Intent intent, @NonNull Uri uri) {
   }
 
-  /**
+  /**============================================================================
    * Send file to <b>player</b>
+   *
    * @param context self
-   * @param intent file
-   * @param player self
+   * @param intent  file
+   * @param player  self
    */
   @Override
-  public void redirect(Context context, Intent intent, Player player) {
-
+  public void redirect(
+          @NonNull Context context,
+          @NonNull Intent intent,
+          @NonNull Player player)
+  {
   }
 
-  /**
+  /**============================================================================
    * Play new instance of file
+   *
    * @param context self
    */
   @Override
-  public void canPlay(Context context) {
-
+  public void canPlay(@NonNull Context context) {
   }
 
-  /**
+  /**============================================================================
    * Error message
+   *
    * @param context self
-   * @param title title
+   * @param title   title
    * @param message error message
    */
   @Override
-  public void errorMessage(Context context, CharSequence title, CharSequence message) {
+  public void errorMessage(
+          @NonNull Context context,
+          @NonNull CharSequence title,
+          @NonNull CharSequence message)
+  {
     AlertDialog.Builder b = new AlertDialog.Builder(context.getApplicationContext());
     b.setTitle(title);
     b.setMessage(message);
@@ -99,6 +119,24 @@ public class SelectedFile implements SelectedFileIntface {
         dialogInterface.dismiss();
       }
     });
+    b.create();
+    b.show();
+  }
+
+  /**============================================================================
+   * Static error message
+   * @param context self
+   * @param title   title
+   * @param message message
+   */
+  public static void errorMessageFromSelectedFile(
+          @NonNull Context context,
+          @NonNull CharSequence title,
+          @NonNull CharSequence message) {
+    AlertDialog.Builder b = new AlertDialog.Builder(context.getApplicationContext());
+    b.setTitle(title);
+    b.setMessage(message);
+    b.setPositiveButton("OK", (dialogInterface, i) -> dialogInterface.dismiss());
     b.create();
     b.show();
   }

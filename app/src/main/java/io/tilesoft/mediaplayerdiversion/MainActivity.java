@@ -1,13 +1,33 @@
+/**
+ *    Copyright (C) 2020  Diogo Rodrigues Roessler
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+/**
+ * DONT NOT DO CHANGE
+ */
+
 package io.tilesoft.mediaplayerdiversion;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AlertDialog;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.content.ActivityNotFoundException;
-import android.content.DialogInterface;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -18,18 +38,19 @@ import android.view.MenuItem;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
-import java.io.File;
-
+import io.tilesoft.mediaplayerdiversion.FileSystem.SelectedFile;
 import io.tilesoft.mediaplayerdiversion.VideoPlayer.Player;
 
 public class MainActivity extends AppCompatActivity {
 
-  private String[] PERMISSIONS = new String[]{
+  public String[] PERMISSIONS = new String[]{
           Manifest.permission.READ_EXTERNAL_STORAGE
   };
-  private final int REQUEST_CODES = 1;
+  public final int REQUEST_CODES = 1;
 
   private Player player;
+
+  public static Intent CHOOSER_PAGE;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
               Manifest.permission.READ_EXTERNAL_STORAGE) !=
               PackageManager.PERMISSION_GRANTED) {
         if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+          return;
         }
 
         requestPermissions(PERMISSIONS, REQUEST_CODES);
@@ -51,24 +73,32 @@ public class MainActivity extends AppCompatActivity {
     VideoView videoView = (VideoView) findViewById(R.id.video_view_main);
     MediaController mediaController = new MediaController(this);
     player = new Player(this, videoView, mediaController);
-    player.newInstanceFromVideoView(this);
+    videoView.setOnPreparedListener(mediaPlayer -> {
+      mediaController.setMediaPlayer((MediaController.MediaPlayerControl) mediaPlayer);
+      SelectedFile.contentResolver = new ContentResolver(this) {
+        @Nullable
+        @Override
+        public String[] getStreamTypes(@NonNull Uri url, @NonNull String mimeTypeFilter) {
+          player.checkIfSelectionItWork(MainActivity.this);
+          return super.getStreamTypes(url, mimeTypeFilter);
+        }
+      };
+    });
   }
 
-  /**
+  /**============================================================================
    * Open external sdcard filesystem
    * <b>You can see in <i>nav_menu.xml</i></b>
    *
-   * @param item
+   * @param item null
    */
   public void FilesChooser_OnClick(MenuItem item) {
     String title = getResources().getString(R.string.filechooser_string);
 
-    Uri externalPath = Uri.parse(Environment.getExternalStorageDirectory().getPath());
+    CHOOSER_PAGE = new Intent(Intent.ACTION_GET_CONTENT);
+    CHOOSER_PAGE.setType("*/*");
 
-    Intent chooser = new Intent(Intent.ACTION_GET_CONTENT);
-    chooser.setType("*/*");
-
-    Intent i = Intent.createChooser(chooser, title);
+    Intent i = Intent.createChooser(CHOOSER_PAGE, title);
 
     try {
       startActivityForResult(i, 1);
