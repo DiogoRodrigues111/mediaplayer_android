@@ -34,6 +34,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.FileUtils;
 import android.view.MenuItem;
 import android.widget.MediaController;
 import android.widget.VideoView;
@@ -43,7 +44,7 @@ import io.tilesoft.mediaplayerdiversion.VideoPlayer.Player;
 
 public class MainActivity extends AppCompatActivity {
 
-  public String[] PERMISSIONS = new String[]{
+  public String[] PERMISSIONS = new String[] {
           Manifest.permission.READ_EXTERNAL_STORAGE
   };
   public final int REQUEST_CODES = 1;
@@ -69,21 +70,33 @@ public class MainActivity extends AppCompatActivity {
       }
     }
 
-    // Initialize player
+    // Initialize Player Class
+    // Find VideoView
+    // Initialize MediaCpntroller
     VideoView videoView = (VideoView) findViewById(R.id.video_view_main);
     MediaController mediaController = new MediaController(this);
     player = new Player(this, videoView, mediaController);
-    videoView.setOnPreparedListener(mediaPlayer -> {
-      mediaController.setMediaPlayer((MediaController.MediaPlayerControl) mediaPlayer);
-      SelectedFile.contentResolver = new ContentResolver(this) {
-        @Nullable
-        @Override
-        public String[] getStreamTypes(@NonNull Uri url, @NonNull String mimeTypeFilter) {
-          player.checkIfSelectionItWork(MainActivity.this);
-          return super.getStreamTypes(url, mimeTypeFilter);
+  }
+
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+
+    switch(requestCode) {
+      case REQUEST_CODES:
+        if(resultCode == RESULT_OK) {
+          if(data != null) {
+            Uri getData = data.getData();
+            try {
+              player.getVideoViewPath(this, getData);
+            } catch(Exception fileSelect_ex) {
+              SelectedFile.errorMessageFromSelectedFile(
+                      this, "Failed to load file", fileSelect_ex.getMessage());
+            }
+          }
         }
-      };
-    });
+        break;
+    }
   }
 
   /**============================================================================

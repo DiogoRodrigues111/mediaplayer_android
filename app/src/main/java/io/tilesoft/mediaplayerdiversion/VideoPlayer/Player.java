@@ -64,9 +64,9 @@ public class Player implements PlayerIntface {
 
     if(ContextCompat.checkSelfPermission(context.getApplicationContext(),
             Manifest.permission.READ_EXTERNAL_STORAGE) ==
-            check) canPlayVideo = true;
+            check) Player.canPlayVideo = true;
 
-    return canPlayVideo;
+    return Player.canPlayVideo;
   }
 
   /**============================================================================
@@ -78,7 +78,7 @@ public class Player implements PlayerIntface {
     checkIfNotificationAccept(context.getApplicationContext(), PackageManager.PERMISSION_GRANTED);
     Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
     File env = Environment.getExternalStorageDirectory().getAbsoluteFile();
-    if(canPlayVideo) {
+    if(Player.canPlayVideo) {
       if(Environment.getExternalStorageDirectory().getAbsoluteFile().canRead()) {
         Uri uriPath = Uri.fromFile(new File(env.toURI())); // filepath
         videoView.setVideoURI(uriPath);
@@ -94,8 +94,12 @@ public class Player implements PlayerIntface {
    * Play <b>VideoView</b>
    */
   public void play() {
-    if(canPlayVideo)
+    if(Player.canPlayVideo)
       videoView.start();
+  }
+
+  public void noCheckAndPlay() {
+    videoView.start();
   }
 
   /**============================================================================
@@ -129,6 +133,11 @@ public class Player implements PlayerIntface {
   @Override
   public void newInstanceFromVideoView(@NonNull Context context) {
     initializeVideoViewForPlay(context.getApplicationContext());
-    if(canPlayVideo) play();
+    if(Player.canPlayVideo) play();
+  }
+
+  public void getVideoViewPath(Context context, Uri uri) {
+    videoView.setVideoURI(uri);
+    noCheckAndPlay();
   }
 }

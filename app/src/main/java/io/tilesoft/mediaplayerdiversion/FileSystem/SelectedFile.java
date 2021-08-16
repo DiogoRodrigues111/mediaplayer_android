@@ -32,6 +32,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import java.io.File;
 
+import io.tilesoft.mediaplayerdiversion.MainActivity;
 import io.tilesoft.mediaplayerdiversion.VideoPlayer.Player;
 
 public class SelectedFile implements SelectedFileIntface {
@@ -54,6 +55,10 @@ public class SelectedFile implements SelectedFileIntface {
               new File(Environment.getExternalStorageDirectory().getPath()));
 
       contentResolver.openInputStream(filePath);
+
+      if(contentResolver == null) errorMessage(
+              context.getApplicationContext(),
+              "ContentResolver equal NULL", "Failed to open and read file");
 
       } catch(Exception fileNotFound_ex) {
         errorMessage(
