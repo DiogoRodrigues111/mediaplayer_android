@@ -94,10 +94,20 @@ public class Player implements PlayerIntface {
    * Play <b>VideoView</b>
    */
   public void play() {
-    if(Player.canPlayVideo)
-      videoView.start();
+    videoView.start();
   }
 
+  /**============================================================================
+   * Pause <b>VideoView</b>
+   */
+  public void pause() {
+    videoView.pause();
+  }
+
+  /**============================================================================
+   * No check, and then play
+   */
+  @Deprecated
   public void noCheckAndPlay() {
     videoView.start();
   }
@@ -138,6 +148,6 @@ public class Player implements PlayerIntface {
 
   public void getVideoViewPath(Context context, Uri uri) {
     videoView.setVideoURI(uri);
-    noCheckAndPlay();
+    play();
   }
 }

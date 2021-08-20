@@ -6,4 +6,10 @@
         android:title="@string/nav_filechooser_string"
         android:onClick="FilesChooser_OnClick"
         />
+    <item
+        android:id="@+id/play"
+        android:icon="@drawable/ic_play_arrow_24"
+        android:title="play"
+        android:onClick="PlayNavVideoView_OnClick"
+        />
 </menu>

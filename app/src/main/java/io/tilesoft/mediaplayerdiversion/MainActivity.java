@@ -20,21 +20,18 @@
 
 package io.tilesoft.mediaplayerdiversion;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuView;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.content.ActivityNotFoundException;
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.FileUtils;
 import android.view.MenuItem;
 import android.widget.MediaController;
 import android.widget.VideoView;
@@ -53,6 +50,9 @@ public class MainActivity extends AppCompatActivity {
 
   public static Intent CHOOSER_PAGE;
 
+  // Objects find
+  MenuView.ItemView play_button_nav;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -69,6 +69,9 @@ public class MainActivity extends AppCompatActivity {
         requestPermissions(PERMISSIONS, REQUEST_CODES);
       }
     }
+
+    // find objects
+    play_button_nav = (MenuView.ItemView)findViewById(R.id.play);
 
     // Initialize Player Class
     // Find VideoView
@@ -116,6 +119,21 @@ public class MainActivity extends AppCompatActivity {
     try {
       startActivityForResult(i, 1);
     } catch (ActivityNotFoundException start_ac_ex) {
+    }
+  }
+
+  /**============================================================================
+   * Play in navigation
+   * @param item null
+   */
+  public void PlayNavVideoView_OnClick(MenuItem item) {
+    if(player.videoView.isPlaying()) {
+      player.pause();
+      play_button_nav.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_pause_24));
+    }
+    else if(!player.videoView.isPlaying()) {
+      player.play();
+      play_button_nav.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_play_arrow_24));
     }
   }
 }
