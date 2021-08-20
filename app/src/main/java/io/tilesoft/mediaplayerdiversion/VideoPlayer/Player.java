@@ -23,34 +23,48 @@ package io.tilesoft.mediaplayerdiversion.VideoPlayer;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Environment;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.WindowMetrics;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.WindowCompat;
+
+import com.google.android.material.slider.Slider;
 
 import java.io.File;
 
 import io.tilesoft.mediaplayerdiversion.FileSystem.SelectedFile;
+import io.tilesoft.mediaplayerdiversion.MainActivity;
+import io.tilesoft.mediaplayerdiversion.R;
 
 public class Player implements PlayerIntface {
 
   public static transient boolean canPlayVideo;
   public  VideoView videoView;
   public  MediaController mediaController;
+  public  Slider slider;
 
   public Player(@NonNull Context context,
                 @NonNull VideoView videoView,
-                @NonNull MediaController mediaController)
+                @NonNull MediaController mediaController,
+                @NonNull Slider slider)
   {
     this.mediaController = new MediaController(context.getApplicationContext());
     this.mediaController = mediaController;
 
     this.videoView = videoView;
     this.videoView.setMediaController(mediaController);
+
+    this.slider = slider;
   }
 
   /**============================================================================
@@ -128,7 +142,7 @@ public class Player implements PlayerIntface {
    * Simples checkout if work, that read file
    * @param context self
    */
-  public void checkIfSelectionItWork(Context context) {
+  public void checkIfSelectionItWork(@NonNull Context context) {
     initializeVideoViewForPlay(context.getApplicationContext());
     SelectedFile fp = new SelectedFile();
     Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -146,8 +160,57 @@ public class Player implements PlayerIntface {
     if(Player.canPlayVideo) play();
   }
 
-  public void getVideoViewPath(Context context, Uri uri) {
+  /**============================================================================
+   * Get video
+   * @param context self
+   * @param uri     self
+   */
+  public void getVideoViewPath(@NonNull Context context, @NonNull Uri uri) {
     videoView.setVideoURI(uri);
+    if(videoView.isPlaying()) {
+      durationVideo(context.getApplicationContext(), slider, videoView.getDuration());
+    }
     play();
+  }
+
+  public void durationVideo(@NonNull Context context, @NonNull Slider sl, @NonNull int dur) {
+    if(dur > 0) {
+      sl.setValue(dur / 1000F);
+    }
+  }
+
+  /**============================================================================
+   * Hide Visibility system
+   * @param context self
+   * @param window  self
+   */
+  public void fullscreenHideVisibility(@NonNull Context context, @NonNull MainActivity window) {
+    View d = window.getWindow().getDecorView();
+    d.setSystemUiVisibility(
+            View.SYSTEM_UI_FLAG_IMMERSIVE
+                    // Set the content to appear under the system bars so that the
+                    // content doesn't resize when the system bars hide and show.
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    // Hide the nav bar and status bar
+                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_FULLSCREEN
+    );
+  }
+
+  /**============================================================================
+   * Show Visibility system
+   * @param context self
+   * @param window  self
+   */
+  public void fullscreenShowVisibility(@NonNull Context context, @NonNull MainActivity window) {
+    View d = window.getWindow().getDecorView();
+    d.setSystemUiVisibility(
+            View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+
+    );
   }
 }

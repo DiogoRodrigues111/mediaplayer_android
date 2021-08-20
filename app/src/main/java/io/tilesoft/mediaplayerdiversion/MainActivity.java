@@ -20,6 +20,7 @@
 
 package io.tilesoft.mediaplayerdiversion;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuView;
@@ -33,8 +34,13 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.MediaController;
 import android.widget.VideoView;
+
+import com.google.android.material.bottomnavigation.BottomNavigationMenu;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.slider.Slider;
 
 import io.tilesoft.mediaplayerdiversion.FileSystem.SelectedFile;
 import io.tilesoft.mediaplayerdiversion.VideoPlayer.Player;
@@ -51,7 +57,8 @@ public class MainActivity extends AppCompatActivity {
   public static Intent CHOOSER_PAGE;
 
   // Objects find
-  MenuView.ItemView play_button_nav;
+  private MenuView.ItemView play_button_nav;
+  private BottomNavigationView nav_view;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -72,13 +79,15 @@ public class MainActivity extends AppCompatActivity {
 
     // find objects
     play_button_nav = (MenuView.ItemView)findViewById(R.id.play);
+    nav_view = (BottomNavigationView)findViewById(R.id.nav_menu_main);
 
     // Initialize Player Class
     // Find VideoView
     // Initialize MediaCpntroller
+    Slider sliderDuration = (Slider)findViewById(R.id.slider_main);
     VideoView videoView = (VideoView) findViewById(R.id.video_view_main);
     MediaController mediaController = new MediaController(this);
-    player = new Player(this, videoView, mediaController);
+    player = new Player(this, videoView, mediaController, sliderDuration);
   }
 
   @Override
@@ -102,6 +111,17 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
+  @Override
+  public void onWindowFocusChanged(boolean hasFocus) {
+    if(hasFocus)  {
+      if(player.videoView.isPlaying()) {
+        player.fullscreenHideVisibility(this, MainActivity.this);
+        hideNavigationBar(player);  //fix
+      }
+    }
+    super.onWindowFocusChanged(hasFocus);
+  }
+
   /**============================================================================
    * Open external sdcard filesystem
    * <b>You can see in <i>nav_menu.xml</i></b>
@@ -123,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**============================================================================
-   * Play in navigation
+   * Play button in navigation
    * @param item null
    */
   public void PlayNavVideoView_OnClick(MenuItem item) {
@@ -134,6 +154,26 @@ public class MainActivity extends AppCompatActivity {
     else if(!player.videoView.isPlaying()) {
       player.play();
       play_button_nav.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_play_arrow_24));
+    }
+  }
+
+  /**============================================================================
+   * Hide navigation menu
+   * @param pl  player
+   */
+  private void hideNavigationBar(@NonNull Player pl) {
+    if(pl.videoView.isPlaying()) {
+      nav_view.setSystemUiVisibility(
+              BottomNavigationView.SYSTEM_UI_FLAG_IMMERSIVE
+                      // Set the content to appear under the system bars so that the
+                      // content doesn't resize when the system bars hide and show.
+                      | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                      | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                      | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                      // Hide the nav bar and status bar
+                      | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                      | View.SYSTEM_UI_FLAG_FULLSCREEN
+      );
     }
   }
 }
