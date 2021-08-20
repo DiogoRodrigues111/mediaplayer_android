@@ -36,6 +36,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.MediaController;
+import android.widget.SeekBar;
 import android.widget.VideoView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationMenu;
@@ -59,6 +60,9 @@ public class MainActivity extends AppCompatActivity {
   // Objects find
   private MenuView.ItemView play_button_nav;
   private BottomNavigationView nav_view;
+  private VideoView videoView;
+  private SeekBar sliderDuration;
+  private MediaController mediaController;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -84,9 +88,9 @@ public class MainActivity extends AppCompatActivity {
     // Initialize Player Class
     // Find VideoView
     // Initialize MediaCpntroller
-    Slider sliderDuration = (Slider)findViewById(R.id.slider_main);
-    VideoView videoView = (VideoView) findViewById(R.id.video_view_main);
-    MediaController mediaController = new MediaController(this);
+    sliderDuration = (SeekBar)findViewById(R.id.seekbar_main);
+    videoView = (VideoView) findViewById(R.id.video_view_main);
+    mediaController = new MediaController(this);
     player = new Player(this, videoView, mediaController, sliderDuration);
   }
 
@@ -101,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
             Uri getData = data.getData();
             try {
               player.getVideoViewPath(this, getData);
+              player.durationVideo(this, sliderDuration, videoView.getDuration());
             } catch(Exception fileSelect_ex) {
               SelectedFile.errorMessageFromSelectedFile(
                       this, "Failed to load file", fileSelect_ex.getMessage());
