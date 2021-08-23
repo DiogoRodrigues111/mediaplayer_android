@@ -27,6 +27,7 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.view.View;
 import android.view.Window;
@@ -37,6 +38,7 @@ import android.widget.SeekBar;
 import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.WindowCompat;
 
@@ -170,7 +172,7 @@ public class Player implements PlayerIntface {
   public void getVideoViewPath(@NonNull Context context, @NonNull Uri uri) {
     videoView.setVideoURI(uri);
     if(videoView.isPlaying()) {
-      durationVideo(context.getApplicationContext(), slider, videoView.getDuration());
+      durationVideo(context.getApplicationContext(), slider);
     }
     play();
   }
@@ -179,23 +181,38 @@ public class Player implements PlayerIntface {
    * Duration Slider
    * @param context self
    * @param sl      self
-   * @param dur     duration
    */
-  public void durationVideo(@NonNull Context context, @NonNull SeekBar sl, @NonNull int dur) {
+  public void durationVideo(@NonNull Context context, @NonNull SeekBar sl) {
     videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
       @Override
       public void onPrepared(MediaPlayer mediaPlayer) {
         mediaPlayer.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener() {
           @Override
           public void onSeekComplete(MediaPlayer mediaPlayer) {
-            float GV
-            if(dur > 0) {
-              videoView.seekTo((int)GV);
-            }
           }
         });
       }
     });
+    sl.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+      @Override
+      public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+        if(videoView.isPlaying()) {
+          seekBar.setMax(videoView.getDuration() / 1000);
+          sl.incrementProgressBy(videoView.getCurrentPosition());
+        }
+      }
+
+      @Override
+      public void onStartTrackingTouch(SeekBar seekBar) {
+
+      }
+
+      @Override
+      public void onStopTrackingTouch(SeekBar seekBar) {
+
+      }
+    });
+
   }
 
   /**============================================================================
