@@ -105,7 +105,6 @@ public class MainActivity extends AppCompatActivity {
             Uri getData = data.getData();
             try {
               player.getVideoViewPath(this, getData);
-              player.durationVideo(this, sliderDuration);
             } catch(Exception fileSelect_ex) {
               SelectedFile.errorMessageFromSelectedFile(
                       this, "Failed to load file", fileSelect_ex.getMessage());

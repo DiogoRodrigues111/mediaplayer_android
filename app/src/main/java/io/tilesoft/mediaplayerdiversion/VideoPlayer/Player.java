@@ -56,6 +56,7 @@ public class Player implements PlayerIntface {
   public  VideoView videoView;
   public  MediaController mediaController;
   public  SeekBar slider;
+  private double currentPos;
 
   public Player(@NonNull Context context,
                 @NonNull VideoView videoView,
@@ -171,9 +172,7 @@ public class Player implements PlayerIntface {
    */
   public void getVideoViewPath(@NonNull Context context, @NonNull Uri uri) {
     videoView.setVideoURI(uri);
-    if(videoView.isPlaying()) {
-      durationVideo(context.getApplicationContext(), slider);
-    }
+    durationVideo(context.getApplicationContext(), slider, videoView);
     play();
   }
 
@@ -182,34 +181,23 @@ public class Player implements PlayerIntface {
    * @param context self
    * @param sl      self
    */
-  public void durationVideo(@NonNull Context context, @NonNull SeekBar sl) {
-    videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-      @Override
-      public void onPrepared(MediaPlayer mediaPlayer) {
-        mediaPlayer.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener() {
-          @Override
-          public void onSeekComplete(MediaPlayer mediaPlayer) {
-          }
-        });
-      }
-    });
+  public void durationVideo(@NonNull Context context, @NonNull SeekBar sl, @NonNull VideoView video) {
+    currentPos = video.getCurrentPosition();
     sl.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
       @Override
       public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-        if(videoView.isPlaying()) {
-          seekBar.setMax(videoView.getDuration() / 1000);
-          sl.incrementProgressBy(videoView.getCurrentPosition());
-        }
+        seekBar.setMax(video.getDuration());
       }
 
       @Override
       public void onStartTrackingTouch(SeekBar seekBar) {
-
+        seekBar.setProgress((int)currentPos);
       }
 
       @Override
       public void onStopTrackingTouch(SeekBar seekBar) {
-
+        currentPos = seekBar.getProgress();
+        video.seekTo((int)currentPos);
       }
     });
 
