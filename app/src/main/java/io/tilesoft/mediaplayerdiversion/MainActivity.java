@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
     sliderDuration = (SeekBar)findViewById(R.id.seekbar_main);
     videoView = (VideoView) findViewById(R.id.video_view_main);
     mediaController = new MediaController(this);
-    player = new Player(this, videoView, mediaController, sliderDuration);
+    player = new Player(this, videoView, null, sliderDuration);
   }
 
   @Override
