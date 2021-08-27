@@ -60,9 +60,12 @@ public class MainActivity extends AppCompatActivity {
   // Objects find
   private MenuView.ItemView play_button_nav;
   private BottomNavigationView nav_view;
+  private MenuView.ItemView loop_button_nav;
   private VideoView videoView;
   private SeekBar sliderDuration;
   private MediaController mediaController;
+
+  private transient boolean isLooping;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -81,9 +84,12 @@ public class MainActivity extends AppCompatActivity {
       }
     }
 
+    isLooping = false;
+
     // find objects
     play_button_nav = (MenuView.ItemView)findViewById(R.id.play);
     nav_view = (BottomNavigationView)findViewById(R.id.nav_menu_main);
+    loop_button_nav = (MenuView.ItemView)findViewById(R.id.loop);
 
     // Initialize Player Class
     // Find VideoView
@@ -179,5 +185,17 @@ public class MainActivity extends AppCompatActivity {
                       | View.SYSTEM_UI_FLAG_FULLSCREEN
       );
     }
+  }
+
+  /**============================================================================
+   * Play button in navigation
+   * @param item null
+   */
+  public void Loop_OnClick(MenuItem item) {
+    if(isLooping == false) {
+      isLooping = true;
+      player.loop(this, videoView);
+    }
+    else if(isLooping == true) { isLooping = false; }
   }
 }

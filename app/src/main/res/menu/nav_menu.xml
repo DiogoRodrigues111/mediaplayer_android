@@ -12,4 +12,11 @@
         android:title="play"
         android:onClick="PlayNavVideoView_OnClick"
         />
+    <item
+        android:id="@+id/loop"
+        android:icon="@drawable/ic_baseline_loop_24"
+        android:title="loop"
+        android:checkable="true"
+        android:onClick="Loop_OnClick"
+        />
 </menu>

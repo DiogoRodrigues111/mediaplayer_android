@@ -27,12 +27,14 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Matrix;
 import android.media.MediaPlayer;
+import android.media.MediaTimestamp;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.LocaleList;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewStructure;
@@ -48,6 +50,7 @@ import android.widget.VideoView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.view.menu.MenuView;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.WindowCompat;
 
@@ -67,6 +70,7 @@ public class Player implements PlayerIntface {
   public  SeekBar slider;
   private double currentPos;
   private Handler handler;
+  private MenuItem loop_button_nav;
 
   public Player(@NonNull Context context,
                 @NonNull VideoView videoView,
@@ -122,6 +126,16 @@ public class Player implements PlayerIntface {
               context.getApplicationContext(),
               "Failed to 'CanPlayVideo'", "Failed to CanPlayVideo");
     }
+  }
+
+  /**============================================================================
+   * Open and send uri with file to video view
+   * But it do not check if notification is accepted in <b>checkIfNotificationAccept</b>
+   */
+  private void readFileFromSdCard() {
+    File fp = Environment.getExternalStorageDirectory().getAbsoluteFile();
+    Uri uri = Uri.fromFile(new File(fp.toURI()));
+    if(Environment.getExternalStorageDirectory().canRead()) videoView.setVideoURI(uri);
   }
 
   /**============================================================================
@@ -251,6 +265,20 @@ public class Player implements PlayerIntface {
         handler.postDelayed(this, delay);
       }
     }, delay);
+  }
+
+  /**
+   * Loop for all media
+   * @param context
+   * @param v
+   */
+  public void loop(@NonNull Context context, @NonNull VideoView v) {
+    v.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+      @Override
+      public void onCompletion(MediaPlayer mediaPlayer) {
+        play();
+      }
+    });
   }
 
   /**============================================================================
