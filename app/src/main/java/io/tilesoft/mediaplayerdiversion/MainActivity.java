@@ -33,6 +33,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.MediaController;
@@ -66,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
   private MediaController mediaController;
 
   private transient boolean isLooping;
+  private transient boolean isFullScreen;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +86,8 @@ public class MainActivity extends AppCompatActivity {
       }
     }
 
-    isLooping = false;
+    isLooping    = false;
+    isFullScreen = false;
 
     // find objects
     play_button_nav = (MenuView.ItemView)findViewById(R.id.play);
@@ -124,10 +127,7 @@ public class MainActivity extends AppCompatActivity {
   @Override
   public void onWindowFocusChanged(boolean hasFocus) {
     if(hasFocus)  {
-      if(player.videoView.isPlaying()) {
-        player.fullscreenHideVisibility(this, MainActivity.this);
-        hideNavigationBar(player);  //fix
-      }
+      navigationBar();
     }
     super.onWindowFocusChanged(hasFocus);
   }
@@ -168,22 +168,27 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**============================================================================
-   * Hide navigation menu
-   * @param pl  player
+   * Navigation menu
    */
-  private void hideNavigationBar(@NonNull Player pl) {
-    if(pl.videoView.isPlaying()) {
-      nav_view.setSystemUiVisibility(
-              BottomNavigationView.SYSTEM_UI_FLAG_IMMERSIVE
-                      // Set the content to appear under the system bars so that the
-                      // content doesn't resize when the system bars hide and show.
-                      | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                      | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                      | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                      // Hide the nav bar and status bar
-                      | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                      | View.SYSTEM_UI_FLAG_FULLSCREEN
-      );
+  private void navigationBar() {
+    if(isFullScreen) {
+      videoView.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+          isFullScreen = false;
+          player.fullscreenShowVisibility(MainActivity.this, MainActivity.this);
+          nav_view.setVisibility(View.VISIBLE);
+        }
+      });
+    } else {
+      videoView.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+          isFullScreen = true;
+          player.fullscreenHideVisibility(MainActivity.this, MainActivity.this);
+          nav_view.setVisibility(View.GONE);
+        }
+      });
     }
   }
 
