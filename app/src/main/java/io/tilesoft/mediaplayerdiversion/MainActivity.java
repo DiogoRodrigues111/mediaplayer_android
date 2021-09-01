@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
           if(data != null) {
             Uri getData = data.getData();
             try {
-              player.getVideoViewPath(this, getData);
+              player.getVideoViewPath(getData);
             } catch(Exception fileSelect_ex) {
               SelectedFile.errorMessageFromSelectedFile(
                       this, "Failed to load file", fileSelect_ex.getMessage());
@@ -178,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
           isFullScreen = false;
-          player.fullscreenShowVisibility(MainActivity.this, MainActivity.this);
+          player.fullscreenShowVisibility(MainActivity.this);
           nav_view.setVisibility(View.VISIBLE);
         }
       });
@@ -187,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
           isFullScreen = true;
-          player.fullscreenHideVisibility(MainActivity.this, MainActivity.this);
+          player.fullscreenHideVisibility(MainActivity.this);
           nav_view.setVisibility(View.GONE);
         }
       });
@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
   public void Loop_OnClick(MenuItem item) {
     if(isLooping == false) {
       isLooping = true;
-      player.loop(this, videoView);
+      player.loop(videoView);
     }
     else if(isLooping == true) { isLooping = false; }
   }

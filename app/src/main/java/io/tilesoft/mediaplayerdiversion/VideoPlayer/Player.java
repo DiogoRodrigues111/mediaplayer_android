@@ -132,6 +132,7 @@ public class Player implements PlayerIntface {
    * Open and send uri with file to video view
    * But it do not check if notification is accepted in <b>checkIfNotificationAccept</b>
    */
+  @Deprecated
   private void readFileFromSdCard() {
     File fp = Environment.getExternalStorageDirectory().getAbsoluteFile();
     Uri uri = Uri.fromFile(new File(fp.toURI()));
@@ -199,12 +200,11 @@ public class Player implements PlayerIntface {
 
   /**============================================================================
    * Get video
-   * @param context self
    * @param uri     self
    */
-  public void getVideoViewPath(@NonNull Context context, @NonNull Uri uri) {
+  public void getVideoViewPath(@NonNull Uri uri) {
     videoView.setVideoURI(uri);
-    durationVideo(context.getApplicationContext(), slider, videoView);
+    durationVideo(slider, videoView);
     play();
   }
 
@@ -224,11 +224,10 @@ public class Player implements PlayerIntface {
 
   /**============================================================================
    * Duration Slider
-   * @param context self
    * @param sl      self
+   * @param video   self
    */
   public void durationVideo(
-          @NonNull Context context,
           @NonNull SeekBar sl,
           @NonNull VideoView video) {
     currentPos = video.getCurrentPosition();
@@ -270,10 +269,9 @@ public class Player implements PlayerIntface {
 
   /**
    * Loop for all media
-   * @param context
-   * @param v
+   * @param v self
    */
-  public void loop(@NonNull Context context, @NonNull VideoView v) {
+  public void loop(@NonNull VideoView v) {
     v.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
       @Override
       public void onCompletion(MediaPlayer mediaPlayer) {
@@ -284,10 +282,9 @@ public class Player implements PlayerIntface {
 
   /**============================================================================
    * Hide Visibility system
-   * @param context self
    * @param window  self
    */
-  public void fullscreenHideVisibility(@NonNull Context context, @NonNull MainActivity window) {
+  public void fullscreenHideVisibility(@NonNull MainActivity window) {
     View d = window.getWindow().getDecorView();
     d.setSystemUiVisibility(
             View.SYSTEM_UI_FLAG_IMMERSIVE
@@ -304,10 +301,9 @@ public class Player implements PlayerIntface {
 
   /**============================================================================
    * Show Visibility system
-   * @param context self
    * @param window  self
    */
-  public void fullscreenShowVisibility(@NonNull Context context, @NonNull MainActivity window) {
+  public void fullscreenShowVisibility(@NonNull MainActivity window) {
     View d = window.getWindow().getDecorView();
     d.setSystemUiVisibility(
             View.SYSTEM_UI_FLAG_LAYOUT_STABLE
