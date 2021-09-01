@@ -157,12 +157,12 @@ public class MainActivity extends AppCompatActivity {
    * @param item null
    */
   public void PlayNavVideoView_OnClick(MenuItem item) {
-    if(player.videoView.isPlaying()) {
+    if(!player.videoView.isPlaying()) {
       player.play();
       play_button_nav.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_play_arrow_24));
       play_button_nav.setTitle("play");
     }
-    else if(!player.videoView.isPlaying()) {
+    else if(player.videoView.isPlaying()) {
       player.pause();
       play_button_nav.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_pause_24));
       play_button_nav.setTitle("pause");

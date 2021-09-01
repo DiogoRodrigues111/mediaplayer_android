@@ -232,12 +232,12 @@ public class Player implements PlayerIntface {
           @NonNull SeekBar sl,
           @NonNull VideoView video) {
     currentPos = video.getCurrentPosition();
-    int delay = 1000;
+    int delay = 1;
     sl.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
       @RequiresApi(api = Build.VERSION_CODES.O)
       @Override
       public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-        seekBar.setMax(video.getDuration());
+        sl.setMax(video.getDuration());
       }
 
       @RequiresApi(api = Build.VERSION_CODES.N)
@@ -261,6 +261,7 @@ public class Player implements PlayerIntface {
     handler.postDelayed(new Runnable() {
       @Override
       public void run() {
+        sl.setMax(video.getDuration());
         sl.setProgress(video.getCurrentPosition());
         handler.postDelayed(this, delay);
       }
