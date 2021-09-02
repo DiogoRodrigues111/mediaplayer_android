@@ -72,6 +72,8 @@ public class Player implements PlayerIntface {
   private Handler handler;
   private MenuItem loop_button_nav;
 
+  private transient boolean isLooping;
+
   public Player(@NonNull Context context,
                 @NonNull VideoView videoView,
                          MediaController mediaController,
@@ -88,6 +90,8 @@ public class Player implements PlayerIntface {
     this.slider = slider;
 
     handler = new Handler();
+
+    isLooping = false;
   }
 
   /**============================================================================
@@ -146,9 +150,14 @@ public class Player implements PlayerIntface {
     videoView.start();
   }
 
-  /**============================================================================
-   * Pause <b>VideoView</b>
-   */
+  public boolean bPlay() {
+    videoView.start();
+    return false;
+  }
+
+    /**============================================================================
+     * Pause <b>VideoView</b>
+     */
   public void pause() {
     videoView.pause();
   }
@@ -271,13 +280,26 @@ public class Player implements PlayerIntface {
    * Loop for all media
    * @param v self
    */
-  public void loop(@NonNull VideoView v) {
-    v.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-      @Override
-      public void onCompletion(MediaPlayer mediaPlayer) {
-        play();
-      }
-    });
+  public void loop(VideoView v) {
+    if(!v.isPlaying()) {
+      isLooping = true;
+      v.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+        @Override
+        public void onCompletion(MediaPlayer mediaPlayer) {
+          if(isLooping) play();
+        }
+      });
+    }
+
+    if(v.isPlaying()) {
+      isLooping = false;
+      v.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+        @Override
+        public void onCompletion(MediaPlayer mediaPlayer) {
+          if(!isLooping && v.isPlaying()) isLooping = true;
+        }
+      });
+    }
   }
 
   /**============================================================================

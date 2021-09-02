@@ -199,10 +199,6 @@ public class MainActivity extends AppCompatActivity {
    * @param item null
    */
   public void Loop_OnClick(MenuItem item) {
-    if(isLooping == false) {
-      isLooping = true;
-      player.loop(videoView);
-    }
-    else if(isLooping == true) { isLooping = false; }
+    player.loop(videoView);
   }
 }
