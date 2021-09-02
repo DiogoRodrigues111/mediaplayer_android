@@ -21,46 +21,30 @@
 package io.tilesoft.mediaplayerdiversion.VideoPlayer;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Matrix;
 import android.media.MediaPlayer;
-import android.media.MediaTimestamp;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.LocaleList;
-import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewStructure;
-import android.view.Window;
-import android.view.WindowManager;
-import android.view.WindowMetrics;
-import android.view.autofill.AutofillId;
-import android.view.autofill.AutofillValue;
 import android.widget.MediaController;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.view.menu.MenuView;
 import androidx.core.content.ContextCompat;
-import androidx.core.view.WindowCompat;
-
-import com.google.android.material.slider.Slider;
 
 import java.io.File;
 
 import io.tilesoft.mediaplayerdiversion.FileSystem.SelectedFile;
 import io.tilesoft.mediaplayerdiversion.MainActivity;
-import io.tilesoft.mediaplayerdiversion.R;
 
 public class Player implements PlayerIntface {
 
@@ -70,14 +54,17 @@ public class Player implements PlayerIntface {
   public  SeekBar slider;
   private double currentPos;
   private Handler handler;
-  private MenuItem loop_button_nav;
+  private TextView startText;
+  private TextView endText;
 
   private transient boolean isLooping;
 
   public Player(@NonNull Context context,
                 @NonNull VideoView videoView,
                          MediaController mediaController,
-                @NonNull SeekBar slider)
+                @NonNull SeekBar slider,
+                @NonNull TextView startText,
+                @NonNull TextView endText)
   {
     this.mediaController = new MediaController(context.getApplicationContext());
     this.mediaController = mediaController;
@@ -89,12 +76,17 @@ public class Player implements PlayerIntface {
     this.slider = new SeekBar(context.getApplicationContext());
     this.slider = slider;
 
+    this.startText = new TextView(context.getApplicationContext());
+    this.endText = new TextView(context.getApplicationContext());
+    this.startText = startText;
+    this.endText   = endText;
+
     handler = new Handler();
 
     isLooping = false;
   }
 
-  /**============================================================================
+  /**
    * Check if notification it accepted
    * @param check <b>simple only passage PackageManager.PERMISSION_GRANTED</b>
    * @return Check if accepted and then can read
@@ -110,12 +102,11 @@ public class Player implements PlayerIntface {
     return Player.canPlayVideo;
   }
 
-  /**============================================================================
+  /**
    * Simple reader for external sdcard.
    * <b>That is only test</b>
    * @param context self
    */
-  @Deprecated
   public void simpleReadExternalSdCard(@NonNull Context context) {
     checkIfNotificationAccept(context.getApplicationContext(), PackageManager.PERMISSION_GRANTED);
     Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -132,18 +123,17 @@ public class Player implements PlayerIntface {
     }
   }
 
-  /**============================================================================
+  /**
    * Open and send uri with file to video view
    * But it do not check if notification is accepted in <b>checkIfNotificationAccept</b>
    */
-  @Deprecated
   private void readFileFromSdCard() {
     File fp = Environment.getExternalStorageDirectory().getAbsoluteFile();
     Uri uri = Uri.fromFile(new File(fp.toURI()));
     if(Environment.getExternalStorageDirectory().canRead()) videoView.setVideoURI(uri);
   }
 
-  /**============================================================================
+  /**
    * Play <b>VideoView</b>
    */
   public void play() {
@@ -155,14 +145,14 @@ public class Player implements PlayerIntface {
     return false;
   }
 
-    /**============================================================================
+    /**
      * Pause <b>VideoView</b>
      */
   public void pause() {
     videoView.pause();
   }
 
-  /**============================================================================
+  /**
    * No check, and then play
    */
   @Deprecated
@@ -170,12 +160,11 @@ public class Player implements PlayerIntface {
     videoView.start();
   }
 
-  /**============================================================================
+  /**
    * Check if notification is accepted and then <b>make simple read external sdcard</b>
    * @param context self
    * @return Check if accepted and then can read and read sdcard
    */
-  @Deprecated
   @Override
   public boolean initializeVideoViewForPlay(@NonNull Context context) {
     checkIfNotificationAccept(context.getApplicationContext(), PackageManager.PERMISSION_GRANTED);
@@ -183,11 +172,10 @@ public class Player implements PlayerIntface {
     return false;
   }
 
-  /**============================================================================
+  /**
    * Simples checkout if work, that read file
    * @param context self
    */
-  @Deprecated
   public void checkIfSelectionItWork(@NonNull Context context) {
     initializeVideoViewForPlay(context.getApplicationContext());
     SelectedFile fp = new SelectedFile();
@@ -196,18 +184,17 @@ public class Player implements PlayerIntface {
     play();
   }
 
-  /**============================================================================
+  /**
    * <b><i>That create new instance for VideoView</i></b>
    * @param context self
    */
-  @Deprecated
   @Override
   public void newInstanceFromVideoView(@NonNull Context context) {
     initializeVideoViewForPlay(context.getApplicationContext());
     if(Player.canPlayVideo) play();
   }
 
-  /**============================================================================
+  /**
    * Get video
    * @param uri     self
    */
@@ -217,12 +204,11 @@ public class Player implements PlayerIntface {
     play();
   }
 
-  /**============================================================================
+  /**
    * Time conversion for label
    * @param value duration
    * @return      duration
    */
-  @Deprecated
   public int timeConversion(long value) {
     int dur = (int) value;
     int hrs = (dur / 3600000);
@@ -231,7 +217,7 @@ public class Player implements PlayerIntface {
     return (int)value;
   }
 
-  /**============================================================================
+  /**
    * Duration Slider
    * @param sl      self
    * @param video   self
@@ -271,6 +257,8 @@ public class Player implements PlayerIntface {
       public void run() {
         sl.setMax(video.getDuration());
         sl.setProgress(video.getCurrentPosition());
+        initCounterLabel(video.getCurrentPosition());
+        endCounterLabel(sl.getMax());
         handler.postDelayed(this, delay);
       }
     }, delay);
@@ -302,7 +290,17 @@ public class Player implements PlayerIntface {
     }
   }
 
-  /**============================================================================
+  private void initCounterLabel(int tseq) {
+    @SuppressLint("DefaultLocale") String formatCounter = String.format("%,d", tseq);
+    startText.setText( formatCounter );
+  }
+
+  private void endCounterLabel(int tseq) {
+    @SuppressLint("DefaultLocale") String formatCounter = String.format("%,d", tseq);
+    endText.setText( formatCounter );
+  }
+
+  /**
    * Hide Visibility system
    * @param window  self
    */
@@ -321,7 +319,7 @@ public class Player implements PlayerIntface {
     );
   }
 
-  /**============================================================================
+  /**
    * Show Visibility system
    * @param window  self
    */

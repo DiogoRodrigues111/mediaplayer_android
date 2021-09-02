@@ -20,7 +20,6 @@
 
 package io.tilesoft.mediaplayerdiversion;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuView;
@@ -33,16 +32,14 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.MediaController;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.VideoView;
 
-import com.google.android.material.bottomnavigation.BottomNavigationMenu;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.slider.Slider;
 
 import io.tilesoft.mediaplayerdiversion.FileSystem.SelectedFile;
 import io.tilesoft.mediaplayerdiversion.VideoPlayer.Player;
@@ -65,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
   private VideoView videoView;
   private SeekBar sliderDuration;
   private MediaController mediaController;
+  private TextView startText;
+  private TextView endText;
 
   private transient boolean isLooping;
   private transient boolean isFullScreen;
@@ -93,6 +92,8 @@ public class MainActivity extends AppCompatActivity {
     play_button_nav = (MenuView.ItemView)findViewById(R.id.play);
     nav_view = (BottomNavigationView)findViewById(R.id.nav_menu_main);
     loop_button_nav = (MenuView.ItemView)findViewById(R.id.loop);
+    startText = (TextView)findViewById(R.id.text_init_duration);
+    endText = (TextView)findViewById(R.id.text_end_duration);
 
     // Initialize Player Class
     // Find VideoView
@@ -100,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
     sliderDuration = (SeekBar)findViewById(R.id.seekbar_main);
     videoView = (VideoView) findViewById(R.id.video_view_main);
     mediaController = new MediaController(this);
-    player = new Player(this, videoView, null, sliderDuration);
+    player = new Player(this, videoView, null, sliderDuration, startText, endText);
   }
 
   @Override
@@ -132,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
     super.onWindowFocusChanged(hasFocus);
   }
 
-  /**============================================================================
+  /**
    * Open external sdcard filesystem
    * <b>You can see in <i>nav_menu.xml</i></b>
    *
@@ -152,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
-  /**============================================================================
+  /**
    * Play button in navigation
    * @param item null
    */
@@ -169,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
-  /**============================================================================
+  /**
    * Navigation menu
    */
   private void navigationBar() {
@@ -194,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
-  /**============================================================================
+  /**
    * Play button in navigation
    * @param item null
    */

@@ -3,6 +3,6 @@
     <string name="nav_filechooser_string">Files</string>
     <string name="filechooser_string">Select file</string>
     <string name="float_button_string">Float button</string>
-    <string name="init_duration">init</string>
-    <string name="end_duration">end</string>
+    <string name="init_duration">00:00</string>
+    <string name="end_duration">00:00</string>
 </resources>

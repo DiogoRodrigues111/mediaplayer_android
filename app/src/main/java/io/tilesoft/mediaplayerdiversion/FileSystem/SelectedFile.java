@@ -39,7 +39,7 @@ public class SelectedFile implements SelectedFileIntface {
 
   public static ContentResolver contentResolver;
 
-  /**============================================================================
+  /**
    * Check if file is selected and then send to <b>makeOpenFile</b>
    *
    * @param context self
@@ -67,7 +67,7 @@ public class SelectedFile implements SelectedFileIntface {
       }
   }
 
-  /**============================================================================
+  /**
    * Make serialize file
    *
    * @param context self
@@ -78,7 +78,7 @@ public class SelectedFile implements SelectedFileIntface {
   public void makeOpenFile(@NonNull Context context, @NonNull Intent intent, @NonNull Uri uri) {
   }
 
-  /**============================================================================
+  /**
    * Send file to <b>player</b>
    *
    * @param context self
@@ -93,7 +93,7 @@ public class SelectedFile implements SelectedFileIntface {
   {
   }
 
-  /**============================================================================
+  /**
    * Play new instance of file
    *
    * @param context self
@@ -102,7 +102,7 @@ public class SelectedFile implements SelectedFileIntface {
   public void canPlay(@NonNull Context context) {
   }
 
-  /**============================================================================
+  /**
    * Error message
    *
    * @param context self
@@ -128,7 +128,7 @@ public class SelectedFile implements SelectedFileIntface {
     b.show();
   }
 
-  /**============================================================================
+  /**
    * Static error message
    * @param context self
    * @param title   title
