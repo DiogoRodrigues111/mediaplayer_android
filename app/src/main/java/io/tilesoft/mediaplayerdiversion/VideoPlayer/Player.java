@@ -140,14 +140,9 @@ public class Player implements PlayerIntface {
     videoView.start();
   }
 
-  public boolean bPlay() {
-    videoView.start();
-    return false;
-  }
-
-    /**
-     * Pause <b>VideoView</b>
-     */
+  /**
+   * Pause <b>VideoView</b>
+   */
   public void pause() {
     videoView.pause();
   }
@@ -209,12 +204,59 @@ public class Player implements PlayerIntface {
    * @param value duration
    * @return      duration
    */
-  public int timeConversion(long value) {
-    int dur = (int) value;
-    int hrs = (dur / 3600000);
-    int mns = (dur / 60000) % 60000;
-    int scs = dur % 60000 / 1000;
-    return (int)value;
+  public String endTimeConvertion(int value) {
+    int min = value/1000/60;
+    int sec = value/1000%60;
+    String time="";
+
+    time += min + ":";
+    if(sec <= 10) time += "0";
+    time += sec;
+
+    return time;
+  }
+
+  /**
+   * Get media duration
+   * @param gD Media Duration
+   */
+  private void endCountLabel(int gD) {
+    endText.setText(endTimeConvertion(gD));
+  }
+
+  /**
+   * Time conversion for label
+   * @param value duration
+   * @return      duration
+   */
+  public String startTimeConversion(int value) {
+    int min = value/1000/60;
+    int sec = value/1000%60;
+    String time = "";
+
+    time += min + ":";
+    if(sec <= 10) time += "0";
+    time += sec;
+
+    return time;
+  }
+
+  /**
+   * Start label counter
+   */
+  private void startCountLabel() {
+    int current = videoView.getCurrentPosition();
+    final Handler hStatus;
+    int delay = 1;
+
+    hStatus = new Handler();
+    hStatus.postDelayed(new Runnable() {
+      @Override
+      public void run() {
+        startText.setText(startTimeConversion(current));
+        hStatus.postDelayed(this, delay);
+      }
+    }, delay);
   }
 
   /**
@@ -257,8 +299,8 @@ public class Player implements PlayerIntface {
       public void run() {
         sl.setMax(video.getDuration());
         sl.setProgress(video.getCurrentPosition());
-        initCounterLabel(video.getCurrentPosition());
-        endCounterLabel(sl.getMax());
+        startCountLabel();
+        endCountLabel(sl.getMax());
         handler.postDelayed(this, delay);
       }
     }, delay);
@@ -290,14 +332,12 @@ public class Player implements PlayerIntface {
     }
   }
 
-  private void initCounterLabel(int tseq) {
-    @SuppressLint("DefaultLocale") String formatCounter = String.format("%,d", tseq);
-    startText.setText( formatCounter );
+  private void startLabel(int tseq) {
+    startTimeConversion(tseq);
   }
 
-  private void endCounterLabel(int tseq) {
-    @SuppressLint("DefaultLocale") String formatCounter = String.format("%,d", tseq);
-    endText.setText( formatCounter );
+  private void endLabel(int tseq) {
+    endTimeConvertion(tseq);
   }
 
   /**
