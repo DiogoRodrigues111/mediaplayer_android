@@ -59,6 +59,8 @@ public class Player implements PlayerIntface {
 
   private transient boolean isLooping;
 
+  private Context context;
+
   public Player(@NonNull Context context,
                 @NonNull VideoView videoView,
                          MediaController mediaController,
@@ -66,6 +68,8 @@ public class Player implements PlayerIntface {
                 @NonNull TextView startText,
                 @NonNull TextView endText)
   {
+    this.context = context;
+
     this.mediaController = new MediaController(context.getApplicationContext());
     this.mediaController = mediaController;
 
@@ -107,7 +111,7 @@ public class Player implements PlayerIntface {
    * <b>That is only test</b>
    * @param context self
    */
-  public void simpleReadExternalSdCard(@NonNull Context context) {
+  public void simpleReadExternalSdCard(Context context) {
     checkIfNotificationAccept(context.getApplicationContext(), PackageManager.PERMISSION_GRANTED);
     Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
     File env = Environment.getExternalStorageDirectory().getAbsoluteFile();
@@ -147,6 +151,10 @@ public class Player implements PlayerIntface {
     videoView.pause();
   }
 
+  public void stop() {
+    videoView.pause();
+  }
+
   /**
    * No check, and then play
    */
@@ -171,12 +179,12 @@ public class Player implements PlayerIntface {
    * Simples checkout if work, that read file
    * @param context self
    */
-  public void checkIfSelectionItWork(@NonNull Context context) {
+  public void checkIfSelectionItWork(Context context) {
     initializeVideoViewForPlay(context.getApplicationContext());
     SelectedFile fp = new SelectedFile();
     Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
     fp.checkIfSelectedFileInChooser(context.getApplicationContext(), intent);
-    play();
+    //play();
   }
 
   /**
@@ -311,24 +319,13 @@ public class Player implements PlayerIntface {
    * @param v self
    */
   public void loop(VideoView v) {
-    if(!v.isPlaying()) {
+    if(!isLooping) {
       isLooping = true;
-      v.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-        @Override
-        public void onCompletion(MediaPlayer mediaPlayer) {
-          if(isLooping) play();
-        }
-      });
+      play();
     }
-
-    if(v.isPlaying()) {
+    else {
       isLooping = false;
-      v.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-        @Override
-        public void onCompletion(MediaPlayer mediaPlayer) {
-          if(!isLooping && v.isPlaying()) isLooping = true;
-        }
-      });
+      pause();
     }
   }
 

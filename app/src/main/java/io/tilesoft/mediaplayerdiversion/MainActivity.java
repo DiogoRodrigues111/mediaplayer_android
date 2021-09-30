@@ -29,6 +29,7 @@ import android.Manifest;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -200,6 +201,11 @@ public class MainActivity extends AppCompatActivity {
    * @param item null
    */
   public void Loop_OnClick(MenuItem item) {
-    player.loop(videoView);
+    player.videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+      @Override
+      public void onCompletion(MediaPlayer mediaPlayer) {
+        player.loop(videoView);
+      }
+    });
   }
 }
