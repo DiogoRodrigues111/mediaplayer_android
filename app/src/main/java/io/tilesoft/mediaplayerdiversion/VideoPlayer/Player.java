@@ -235,8 +235,9 @@ public class Player implements PlayerIntface {
 
     /**
      * Time conversion for label
+     *
      * @param value duration
-     * @return duration
+     * @return Time variable from duration
      */
     public String startTimeConversion(int value) {
         int min = value / 1000 / 60;
@@ -250,22 +251,23 @@ public class Player implements PlayerIntface {
         return time;
     }
 
+    private String handlerTimeConversion() {
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startTimeConversion(videoView.getCurrentPosition());
+                handler.postDelayed(this, 1);
+            }
+        }, 1);
+        return "";
+    }
+
     /**
      * Start label counter
      */
     private void startCountLabel() {
         int current = videoView.getCurrentPosition();
-        final Handler hStatus;
-        int delay = 1;
-
-        hStatus = new Handler();
-        hStatus.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                startText.setText(startTimeConversion(current));
-                hStatus.postDelayed(this, delay);
-            }
-        }, delay);
+        startText.setText(startTimeConversion(current));
     }
 
     /**
@@ -317,6 +319,7 @@ public class Player implements PlayerIntface {
 
     /**
      * Loop for all media
+     *
      * @param v self
      */
     public void loop(VideoView v) {
@@ -339,6 +342,7 @@ public class Player implements PlayerIntface {
 
     /**
      * Hide Visibility system
+     *
      * @param window  self
      */
     public void fullscreenHideVisibility(@NonNull MainActivity window) {
@@ -358,6 +362,7 @@ public class Player implements PlayerIntface {
 
     /**
      * Show Visibility system
+     *
      * @param window  self
      */
     public void fullscreenShowVisibility(@NonNull MainActivity window) {
