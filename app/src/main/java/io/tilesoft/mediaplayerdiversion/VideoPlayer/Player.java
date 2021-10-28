@@ -251,17 +251,6 @@ public class Player implements PlayerIntface {
         return time;
     }
 
-    private String handlerTimeConversion() {
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                startTimeConversion(videoView.getCurrentPosition());
-                handler.postDelayed(this, 1);
-            }
-        }, 1);
-        return "";
-    }
-
     /**
      * Start label counter
      */
@@ -323,13 +312,7 @@ public class Player implements PlayerIntface {
      * @param v self
      */
     public void loop(VideoView v) {
-        if (!isLooping) {
-            isLooping = true;
-            play();
-        } else {
-            isLooping = false;
-            pause();
-        }
+
     }
 
     private void startLabel(int tseq) {

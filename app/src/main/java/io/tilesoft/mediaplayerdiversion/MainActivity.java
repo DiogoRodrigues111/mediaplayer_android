@@ -41,6 +41,7 @@ import android.view.View;
 import android.widget.MediaController;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -132,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         if (hasFocus) {
-            navigationBar();
+            //navigationBar();
         }
         super.onWindowFocusChanged(hasFocus);
     }
@@ -154,6 +155,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             startActivityForResult(i, 1);
         } catch (ActivityNotFoundException start_ac_ex) {
+            start_ac_ex.printStackTrace();
         }
     }
 
@@ -176,6 +178,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Navigation menu
      */
+    @Deprecated
     private void navigationBar() {
         if (isFullScreen) {
             videoView.setOnClickListener(new View.OnClickListener() {
@@ -203,12 +206,25 @@ public class MainActivity extends AppCompatActivity {
      * @param item null
      */
     public void Loop_OnClick(MenuItem item) {
-        player.videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-                player.loop(videoView);
-            }
-        });
+        if(!item.isChecked()) {
+            player.videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    player.play();
+                    item.setChecked(true);
+                    Toast.makeText(MainActivity.this, "CHEKCED", Toast.LENGTH_LONG).show();
+                }
+            });
+        } else if (item.isChecked()) {
+            player.videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    item.setChecked( false );
+                    Toast.makeText(MainActivity.this, "NO CHEKCED", Toast.LENGTH_LONG).show();
+                    player.pause();
+                }
+            });
+        }
     }
 
     /**
