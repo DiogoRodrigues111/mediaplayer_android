@@ -3,8 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/softwares/AndroidApps/mediaplayer_app_java/app/src/main/res/layout/activity_main.xml" value="0.2328125" />
-        <entry key="..\:/softwares/AndroidApps/mediaplayer_app_java/app/src/main/res/menu/nav_menu.xml" value="0.2328125" />
+        <entry key="..\:/softwares/AndroidApps/mediaplayer_app_java/app/src/main/res/drawable/ic_baseline_loop_24.xml" value="0.24583333333333332" />
+        <entry key="..\:/softwares/AndroidApps/mediaplayer_app_java/app/src/main/res/drawable/ic_baseline_play_circle_filled_24.xml" value="0.184375" />
+        <entry key="..\:/softwares/AndroidApps/mediaplayer_app_java/app/src/main/res/drawable/ic_folder_open_24.xml" value="0.24583333333333332" />
+        <entry key="..\:/softwares/AndroidApps/mediaplayer_app_java/app/src/main/res/drawable/ic_pause_24.xml" value="0.24583333333333332" />
+        <entry key="..\:/softwares/AndroidApps/mediaplayer_app_java/app/src/main/res/drawable/ic_play_arrow_24.xml" value="0.24583333333333332" />
+        <entry key="..\:/softwares/AndroidApps/mediaplayer_app_java/app/src/main/res/drawable/rounded_opacity_nav.xml" value="0.24583333333333332" />
+        <entry key="..\:/softwares/AndroidApps/mediaplayer_app_java/app/src/main/res/layout/activity_main.xml" value="0.2" />
+        <entry key="..\:/softwares/AndroidApps/mediaplayer_app_java/app/src/main/res/menu/nav_menu.xml" value="0.18" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
       </map>
     </option>

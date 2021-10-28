@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:theme="@style/Theme.MediaPlayerDiversion"
     tools:context=".MainActivity">
 
     <VideoView
@@ -21,13 +22,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@drawable/rounded_opacity_nav"
         app:menu="@menu/nav_menu">
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:importantForAutofill="auto"
-            >
+            android:importantForAutofill="auto">
 
             <TextView
                 android:id="@+id/text_init_duration"
@@ -39,6 +40,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="5dp"
                 android:importantForAutofill="yes"
+                android:textColor="@color/white"
                 android:text="@string/init_duration" />
 
             <SeekBar
@@ -52,6 +54,9 @@
                 android:layout_marginTop="0dp"
                 android:layout_marginEnd="54dp"
                 android:layout_marginBottom="60dp"
+                android:progressBackgroundTint="@color/white"
+                android:progressTintMode="multiply"
+                android:progressBackgroundTintMode="src_atop"
                 android:importantForAutofill="yes" />
 
             <TextView
@@ -65,6 +70,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_toEndOf="@+id/seekbar_main"
                 android:importantForAutofill="yes"
+                android:textColor="@color/white"
                 android:text="@string/end_duration"/>
         </RelativeLayout>
 

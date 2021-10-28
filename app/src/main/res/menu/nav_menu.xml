@@ -9,13 +9,13 @@
     <item
         android:id="@+id/play"
         android:icon="@drawable/ic_play_arrow_24"
-        android:title="play"
+        android:title="@string/play_nav_button"
         android:onClick="PlayNavVideoView_OnClick"
         />
     <item
         android:id="@+id/loop"
         android:icon="@drawable/ic_baseline_loop_24"
-        android:title="loop"
+        android:title="@string/loop_nav_button"
         android:checkable="true"
         android:onClick="Loop_OnClick"
         />

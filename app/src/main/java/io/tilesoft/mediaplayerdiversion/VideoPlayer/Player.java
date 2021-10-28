@@ -52,7 +52,7 @@ import io.tilesoft.mediaplayerdiversion.MainActivity;
 
 public class Player implements PlayerIntface {
 
-    public static transient boolean canPlayVideo;
+    @Deprecated() public static transient boolean canPlayVideo;
     public VideoView videoView;
     public MediaController mediaController;
     public SeekBar slider;
@@ -61,13 +61,24 @@ public class Player implements PlayerIntface {
     private TextView startText;
     private TextView endText;
 
-    private transient boolean isLooping;
-
     private Context context;
 
+    /**
+     * Player constructor, In here keep holder all necessary component for create
+     * new instance on others classes.
+     *
+     * It's constructor is a key for complete uses.
+     *
+     * @param context Application context, in the case <b>MainActivity</b>.
+     * @param videoView VideoView params.
+     * @param mediaController MediaController params. <b>which nullable</b>.
+     * @param slider Slider component params.
+     * @param startText Label, start text number component params.
+     * @param endText Label, end text number component params.
+     */
     public Player(@NonNull Context context,
                   @NonNull VideoView videoView,
-                  MediaController mediaController,
+                  @Nullable MediaController mediaController,
                   @NonNull SeekBar slider,
                   @NonNull TextView startText,
                   @NonNull TextView endText) {
@@ -89,8 +100,6 @@ public class Player implements PlayerIntface {
         this.endText = endText;
 
         handler = new Handler();
-
-        isLooping = false;
     }
 
     /**
@@ -324,18 +333,18 @@ public class Player implements PlayerIntface {
     public MenuItem loop(MenuItem item) {
         item.setChecked( false );
         if(item.isChecked()) {
+            item.setChecked( true );
             videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
                     play();
-                    item.setChecked( true );
                 }
             });
         } else {
+            item.setChecked( false );
             videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
-                    item.setChecked( false );
                     pause();
                 }
             });

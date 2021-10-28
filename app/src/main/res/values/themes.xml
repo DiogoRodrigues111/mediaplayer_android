@@ -1,9 +1,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.MediaPlayerDiversion" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.MediaPlayerDiversion" parent="Theme.MaterialComponents.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/system</item>
-        <item name="colorPrimaryVariant">@color/other_system</item>
+        <item name="colorPrimary">@color/selected_color_system</item>
+        <item name="colorPrimaryVariant">@color/marron_system_sec</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
