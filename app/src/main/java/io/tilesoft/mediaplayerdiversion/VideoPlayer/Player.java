@@ -93,6 +93,7 @@ public class Player implements PlayerIntface {
 
     /**
      * Check if notification it accepted
+     *
      * @param check <b>simple only passage PackageManager.PERMISSION_GRANTED</b>
      * @return Check if accepted and then can read
      */
@@ -110,6 +111,7 @@ public class Player implements PlayerIntface {
     /**
      * Simple reader for external sdcard.
      * <b>That is only test</b>
+     *
      * @param context self
      */
     public void simpleReadExternalSdCard(Context context) {
@@ -166,6 +168,7 @@ public class Player implements PlayerIntface {
 
     /**
      * Check if notification is accepted and then <b>make simple read external sdcard</b>
+     *
      * @param context self
      * @return Check if accepted and then can read and read sdcard
      */
@@ -178,6 +181,7 @@ public class Player implements PlayerIntface {
 
     /**
      * Simples checkout if work, that read file
+     *
      * @param context self
      */
     public void checkIfSelectionItWork(Context context) {
@@ -190,6 +194,7 @@ public class Player implements PlayerIntface {
 
     /**
      * <b><i>That create new instance for VideoView</i></b>
+     *
      * @param context self
      */
     @Override
@@ -200,6 +205,7 @@ public class Player implements PlayerIntface {
 
     /**
      * Get video
+     *
      * @param uri     self
      */
     public void getVideoViewPath(@NonNull Uri uri) {
@@ -210,6 +216,7 @@ public class Player implements PlayerIntface {
 
     /**
      * Time conversion for label
+     *
      * @param value duration
      * @return duration
      */
@@ -306,19 +313,21 @@ public class Player implements PlayerIntface {
         }, delay);
     }
 
+
     /**
-     * Loop for all media
+     * Make conversion of strings format.
      *
-     * @param v self
+     * @param tseq
      */
-    public void loop(VideoView v) {
-
-    }
-
     private void startLabel(int tseq) {
         startTimeConversion(tseq);
     }
 
+    /**
+     * Make conversion of strings format.
+     *
+     * @param tseq
+     */
     private void endLabel(int tseq) {
         endTimeConvertion(tseq);
     }

@@ -161,6 +161,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Play button in navigation
+     *
      * @param item null
      */
     public void PlayNavVideoView_OnClick(MenuItem item) {
@@ -203,6 +204,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Play button in navigation
+     *
      * @param item null
      */
     public void Loop_OnClick(MenuItem item) {
@@ -212,7 +214,6 @@ public class MainActivity extends AppCompatActivity {
                 public void onCompletion(MediaPlayer mp) {
                     player.play();
                     item.setChecked(true);
-                    Toast.makeText(MainActivity.this, "CHEKCED", Toast.LENGTH_LONG).show();
                 }
             });
         } else if (item.isChecked()) {
@@ -220,7 +221,6 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
                     item.setChecked( false );
-                    Toast.makeText(MainActivity.this, "NO CHEKCED", Toast.LENGTH_LONG).show();
                     player.pause();
                 }
             });
