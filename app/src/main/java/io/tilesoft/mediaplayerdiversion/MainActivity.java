@@ -41,7 +41,7 @@ import android.view.View;
 import android.widget.MediaController;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.Toast;    // debug
 import android.widget.VideoView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -60,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
 
     public static Intent CHOOSER_PAGE;
 
-    // Objects find
     private MenuView.ItemView play_button_nav;
     private BottomNavigationView nav_view;
     private MenuView.ItemView loop_button_nav;
@@ -205,26 +204,10 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Play button in navigation
      *
-     * @param item null
+     * @param item loop_button_nav <b>self</b>
      */
     public void Loop_OnClick(MenuItem item) {
-        if(!item.isChecked()) {
-            player.videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mp) {
-                    player.play();
-                    item.setChecked(true);
-                }
-            });
-        } else if (item.isChecked()) {
-            player.videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mp) {
-                    item.setChecked( false );
-                    player.pause();
-                }
-            });
-        }
+        player.loop(item);
     }
 
     /**

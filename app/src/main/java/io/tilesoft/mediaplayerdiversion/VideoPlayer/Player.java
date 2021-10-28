@@ -32,6 +32,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.MediaController;
 import android.widget.SeekBar;
@@ -41,6 +42,7 @@ import android.widget.VideoView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import java.io.File;
@@ -313,6 +315,34 @@ public class Player implements PlayerIntface {
         }, delay);
     }
 
+    /**
+     * It's do looping infinity
+     *
+     * @param item loop button on <b>Navigation Bar</b>
+     * @return item
+     */
+    public MenuItem loop(MenuItem item) {
+        item.setChecked( false );
+        if(item.isChecked()) {
+            videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    play();
+                    item.setChecked( true );
+                }
+            });
+        } else {
+            videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    item.setChecked( false );
+                    pause();
+                }
+            });
+        }
+
+        return item;
+    }
 
     /**
      * Make conversion of strings format.
