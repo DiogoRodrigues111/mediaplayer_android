@@ -9,7 +9,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="system">#4080EC</color>
     <color name="other_system">#4081EC</color>
-    <color name="black_50_opacity">#5E000000</color>
+    <color name="black_50_opacity">#80000000</color>
     <color name="marron_system_sec">#67351E</color>
     <color name="selected_color_system">#A2D3EA</color>
 </resources>
