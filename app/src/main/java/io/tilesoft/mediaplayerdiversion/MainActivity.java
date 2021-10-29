@@ -29,12 +29,15 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.content.ActivityNotFoundException;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.media.MediaPlayer;
+import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -69,9 +72,6 @@ public class MainActivity extends AppCompatActivity {
     private TextView startText;
     private TextView endText;
 
-    private transient boolean isLooping;
-    private transient boolean isFullScreen;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,9 +89,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        isLooping = false;
-        isFullScreen = false;
-
         // find objects
         play_button_nav = (MenuView.ItemView) findViewById(R.id.play);
         nav_view = (BottomNavigationView) findViewById(R.id.nav_menu_main);
@@ -108,6 +105,17 @@ public class MainActivity extends AppCompatActivity {
         player = new Player(this, videoView, null, sliderDuration, startText, endText);
     }
 
+    /**
+     * Get Activity result for codes how request, result and open chooser
+     * in the case user accepted permission for read external sd card or internal storage.
+     *
+     * If access is <b>GRANTED</b> then can play video, or others media format compatible
+     * with Android Phone.
+     *
+     * @param requestCode <b>REQUEST_CODES</b>
+     * @param resultCode <b>If is result is OK</b>
+     * @param data <b>Intent of activity chooser</b>
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -116,7 +124,9 @@ public class MainActivity extends AppCompatActivity {
             case REQUEST_CODES:
                 if (resultCode == RESULT_OK) {
                     if (data != null) {
+
                         Uri getData = data.getData();
+
                         try {
                             player.getVideoViewPath(getData);
                         } catch (Exception fileSelect_ex) {
@@ -129,12 +139,45 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Get focus on window, while window is changed.
+     *
+     * @param hasFocus true
+     */
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         if (hasFocus) {
-            //navigationBar();
+
         }
         super.onWindowFocusChanged(hasFocus);
+    }
+
+    /**
+     * It's get thumbnails of chooser in Sd Card.
+     *
+     * Examples:
+     * <b>Bitmap bmp = MediaStore.Video.Thumbnails.getThumbnail(
+     *                                 getContentResolver(), ContentUris.parseId(getData),
+     *                                 MediaStore.Video.Thumbnails.MICRO_KIND,
+     *                                 (BitmapFactory.Options)null);</b>
+     *
+     * <b>Bitmap bmp = ThumbnailUtils.createVideoThumbnail(data.getData().getPath(),
+     *                                 MediaStore.Video.Thumbnails.MINI_KIND);</b>
+     *
+     */
+    private Drawable getVideoThumbnails() throws RuntimeException {
+        final int videoId = MediaStore.Video.Thumbnails.MICRO_KIND;
+        String[] proj = new String[] { MediaStore.Video.Thumbnails.DATA };
+        String[] vID  = new String[] { String.valueOf( videoId ) };
+        ContentResolver contentResolver = getContentResolver();
+
+        Cursor cursor = contentResolver.query(
+                MediaStore.Video.Thumbnails.EXTERNAL_CONTENT_URI,
+                proj,
+                MediaStore.Video.Thumbnails.VIDEO_ID,
+                vID, null);
+
+        return Drawable.createFromPath(cursor.getString(0));
     }
 
     /**
@@ -172,32 +215,6 @@ public class MainActivity extends AppCompatActivity {
             player.pause();
             play_button_nav.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_pause_24));
             play_button_nav.setTitle("pause");
-        }
-    }
-
-    /**
-     * Navigation menu
-     */
-    @Deprecated
-    private void navigationBar() {
-        if (isFullScreen) {
-            videoView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    isFullScreen = false;
-                    player.fullscreenShowVisibility(MainActivity.this);
-                    nav_view.setVisibility(View.VISIBLE);
-                }
-            });
-        } else {
-            videoView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    isFullScreen = true;
-                    player.fullscreenHideVisibility(MainActivity.this);
-                    nav_view.setVisibility(View.GONE);
-                }
-            });
         }
     }
 
