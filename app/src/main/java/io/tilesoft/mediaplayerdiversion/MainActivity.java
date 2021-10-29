@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2020  Diogo Rodrigues Roessler
+ * Copyright (C) 2021  Diogo Rodrigues Roessler
  * <p>
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,10 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * <p>
- * DONT NOT DO CHANGE
- */
-/**
- * DONT NOT DO CHANGE
+ *
+ * <b>DON'T NOT DO CHANGE - Diogo Rodrigues Roessler ( 2021 )</b>
  */
 
 package io.tilesoft.mediaplayerdiversion;
@@ -28,6 +26,7 @@ import androidx.appcompat.view.menu.MenuView;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -49,7 +48,6 @@ import android.widget.VideoView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import io.tilesoft.mediaplayerdiversion.FileSystem.SelectedFile;
 import io.tilesoft.mediaplayerdiversion.VideoPlayer.Player;
 
 public class MainActivity extends AppCompatActivity {
@@ -57,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     public String[] PERMISSIONS = new String[]{
             Manifest.permission.READ_EXTERNAL_STORAGE
     };
+
     public final int REQUEST_CODES = 1;
 
     private Player player;
@@ -65,12 +64,15 @@ public class MainActivity extends AppCompatActivity {
 
     private MenuView.ItemView play_button_nav;
     private BottomNavigationView nav_view;
-    private MenuView.ItemView loop_button_nav;
-    private VideoView videoView;
-    private SeekBar sliderDuration;
-    private MediaController mediaController;
-    private TextView startText;
-    private TextView endText;
+
+    // Be careful uses this public globals variables, that MainActivity
+    // on others classes.
+    public MenuView.ItemView loop_button_nav;
+    public VideoView videoView;
+    public SeekBar sliderDuration;
+    public MediaController mediaController;
+    public TextView startText;
+    public TextView endText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,18 +91,15 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        // find objects
-        play_button_nav = (MenuView.ItemView) findViewById(R.id.play);
-        nav_view = (BottomNavigationView) findViewById(R.id.nav_menu_main);
-        loop_button_nav = (MenuView.ItemView) findViewById(R.id.loop);
-        startText = (TextView) findViewById(R.id.text_init_duration);
-        endText = (TextView) findViewById(R.id.text_end_duration);
+        // Find objects
+        play_button_nav = findViewById(R.id.play);
+        nav_view = findViewById(R.id.nav_menu_main);
+        loop_button_nav = findViewById(R.id.loop);
+        startText = findViewById(R.id.text_init_duration);
+        endText = findViewById(R.id.text_end_duration);
 
-        // Initialize Player Class
-        // Find VideoView
-        // Initialize MediaCpntroller
-        sliderDuration = (SeekBar) findViewById(R.id.seekbar_main);
-        videoView = (VideoView) findViewById(R.id.video_view_main);
+        sliderDuration = findViewById(R.id.seekbar_main);
+        videoView = findViewById(R.id.video_view_main);
         mediaController = new MediaController(this);
         player = new Player(this, videoView, null, sliderDuration, startText, endText);
     }
@@ -113,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
      * with Android Phone.
      *
      * @param requestCode <b>REQUEST_CODES</b>
-     * @param resultCode <b>If is result is OK</b>
+     * @param resultCode <b>if is result is OK</b>
      * @param data <b>Intent of activity chooser</b>
      */
     @Override
@@ -130,8 +129,7 @@ public class MainActivity extends AppCompatActivity {
                         try {
                             player.getVideoViewPath(getData);
                         } catch (Exception fileSelect_ex) {
-                            SelectedFile.errorMessageFromSelectedFile(
-                                    this, "Failed to load file", fileSelect_ex.getMessage());
+                            fileSelect_ex.printStackTrace();
                         }
                     }
                 }
@@ -142,13 +140,10 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Get focus on window, while window is changed.
      *
-     * @param hasFocus true
+     * @param hasFocus always true.
      */
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
-        if (hasFocus) {
-
-        }
         super.onWindowFocusChanged(hasFocus);
     }
 
@@ -165,12 +160,14 @@ public class MainActivity extends AppCompatActivity {
      *                                 MediaStore.Video.Thumbnails.MINI_KIND);</b>
      *
      */
+    @Nullable
     private Drawable getVideoThumbnails() throws RuntimeException {
         final int videoId = MediaStore.Video.Thumbnails.MICRO_KIND;
         String[] proj = new String[] { MediaStore.Video.Thumbnails.DATA };
         String[] vID  = new String[] { String.valueOf( videoId ) };
         ContentResolver contentResolver = getContentResolver();
 
+        @SuppressLint("Recycle") // Recycle for a while
         Cursor cursor = contentResolver.query(
                 MediaStore.Video.Thumbnails.EXTERNAL_CONTENT_URI,
                 proj,

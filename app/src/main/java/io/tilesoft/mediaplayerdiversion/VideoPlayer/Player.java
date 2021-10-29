@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2020  Diogo Rodrigues Roessler
+ * Copyright (C) 2021  Diogo Rodrigues Roessler
  * <p>
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,10 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * <p>
- * DONT NOT DO CHANGE
- */
-/**
- * DONT NOT DO CHANGE
+ *
+ * <b>DON'T NOT DO CHANGE - Diogo Rodrigues Roessler ( 2021 )</b>
  */
 
 package io.tilesoft.mediaplayerdiversion.VideoPlayer;
@@ -42,7 +40,6 @@ import android.widget.VideoView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import java.io.File;
@@ -52,16 +49,18 @@ import io.tilesoft.mediaplayerdiversion.MainActivity;
 
 public class Player implements PlayerIntface {
 
+    // Be careful uses this public globals variables, that MainActivity
+    // on others classes.
     @Deprecated() public static transient boolean canPlayVideo;
     public VideoView videoView;
     public MediaController mediaController;
     public SeekBar slider;
     private double currentPos;
-    private Handler handler;
+    public Handler handler;
     private TextView startText;
     private TextView endText;
 
-    private Context context;
+    public Context context;
 
     /**
      * Player constructor, In here keep holder all necessary component for create
