@@ -4,9 +4,12 @@ import android.content.Context;
 import android.os.Environment;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
+
+import io.tilesoft.mediaplayerdiversion.Config.DebugOnly;
 
 public class ExternalStorage {
 
@@ -33,7 +36,7 @@ public class ExternalStorage {
         return addInputArray;
     }
 
-    public void displayExternalStorage() {
+    public void displayExternalStorage( Context context ) {
 
         ArrayList<File> displayRoutine = getStorageFiles (
                 // Get reader external storage files.
@@ -47,5 +50,15 @@ public class ExternalStorage {
         }
 
         ITEM = item;
+
+        if(DebugOnly.DEBUG_ONLY == 1) {
+            if(ITEM == null)
+                Toast.makeText(
+                        context.getApplicationContext(), "External equal null", Toast.LENGTH_LONG).show();
+            else
+                Toast.makeText(
+                        context.getApplicationContext(),
+                        "External differ then null", Toast.LENGTH_LONG).show();
+        }
     }
 }

@@ -50,6 +50,7 @@ import android.widget.VideoView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import io.tilesoft.mediaplayerdiversion.Config.DebugOnly;
 import io.tilesoft.mediaplayerdiversion.FileSystem.ExternalStorage;
 import io.tilesoft.mediaplayerdiversion.VideoPlayer.Player;
 
@@ -85,6 +86,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        DebugOnly.DEBUG_ONLY = 0;
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(MainActivity.this,
                     Manifest.permission.READ_EXTERNAL_STORAGE) !=
@@ -111,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
         player = new Player(this, videoView, null, sliderDuration, startText, endText);
 
         listView = findViewById(R.id.external_storage_view);
-        arrayAdapter = new ArrayAdapter<>(this,
+        arrayAdapter = new ArrayAdapter<String>(this,
                android.R.layout.simple_list_item_1, ExternalStorage.ITEM);
         listView.setAdapter(arrayAdapter);
     }
@@ -258,12 +261,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void openExternalStorage(MenuItem item) {
-        ExternalStorage externalStorage = new ExternalStorage();
-        externalStorage.displayExternalStorage();
+        final ExternalStorage externalStorage = new ExternalStorage();
 
-        if(ExternalStorage.ITEM == null)
-            Toast.makeText(this, "ITEM equal null", Toast.LENGTH_LONG).show();
-        else
-            Toast.makeText(this, "ITEM differ then null", Toast.LENGTH_LONG).show();
+        if(player.checkIfNotificationAccept(this, PackageManager.PERMISSION_GRANTED)) {
+            if(DebugOnly.DEBUG_ONLY == 1)
+                Toast.makeText(this, "Permission Granted to Sd Card", Toast.LENGTH_LONG).show();
+            externalStorage.displayExternalStorage( this );
+        }
+
+        if(DebugOnly.DEBUG_ONLY == 1) {
+            if(ExternalStorage.ITEM == null)
+                Toast.makeText(this, "ITEM equal null", Toast.LENGTH_LONG).show();
+            else
+                Toast.makeText(this, "ITEM differ then null", Toast.LENGTH_LONG).show();
+        }
     }
 }
