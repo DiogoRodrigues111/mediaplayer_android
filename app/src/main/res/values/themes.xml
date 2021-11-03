@@ -3,7 +3,7 @@
     <style name="Theme.MediaPlayerDiversion" parent="Theme.MaterialComponents.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/selected_color_system</item>
-        <item name="colorPrimaryVariant">@color/marron_system_sec</item>
+        <item name="colorPrimaryVariant">@color/video_view_background_color</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>

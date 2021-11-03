@@ -12,4 +12,6 @@
     <color name="black_50_opacity">#80000000</color>
     <color name="marron_system_sec">#67351E</color>
     <color name="selected_color_system">#A2D3EA</color>
+    <color name="video_view_background_color">#5F4538</color>
+    <color name="selector_list_view_external_storage">#5233A7FF</color>
 </resources>

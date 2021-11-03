@@ -40,6 +40,8 @@ import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.MediaController;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -48,6 +50,7 @@ import android.widget.VideoView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import io.tilesoft.mediaplayerdiversion.FileSystem.ExternalStorage;
 import io.tilesoft.mediaplayerdiversion.VideoPlayer.Player;
 
 public class MainActivity extends AppCompatActivity {
@@ -62,9 +65,6 @@ public class MainActivity extends AppCompatActivity {
 
     public static Intent CHOOSER_PAGE;
 
-    private MenuView.ItemView play_button_nav;
-    private BottomNavigationView nav_view;
-
     // Be careful uses this public globals variables, that MainActivity
     // on others classes.
     public MenuView.ItemView loop_button_nav;
@@ -73,6 +73,12 @@ public class MainActivity extends AppCompatActivity {
     public MediaController mediaController;
     public TextView startText;
     public TextView endText;
+    public ListView listView;
+
+    public MenuView.ItemView play_button_nav;
+    public BottomNavigationView nav_view;
+
+    public ArrayAdapter<String> arrayAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +89,8 @@ public class MainActivity extends AppCompatActivity {
             if (ContextCompat.checkSelfPermission(MainActivity.this,
                     Manifest.permission.READ_EXTERNAL_STORAGE) !=
                     PackageManager.PERMISSION_GRANTED) {
-                if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                if (shouldShowRequestPermissionRationale(
+                        Manifest.permission.READ_EXTERNAL_STORAGE)) {
                     return;
                 }
 
@@ -91,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        // Find objects
+        // Find's objects
         play_button_nav = findViewById(R.id.play);
         nav_view = findViewById(R.id.nav_menu_main);
         loop_button_nav = findViewById(R.id.loop);
@@ -102,6 +109,11 @@ public class MainActivity extends AppCompatActivity {
         videoView = findViewById(R.id.video_view_main);
         mediaController = new MediaController(this);
         player = new Player(this, videoView, null, sliderDuration, startText, endText);
+
+        listView = findViewById(R.id.external_storage_view);
+        arrayAdapter = new ArrayAdapter<>(this,
+               android.R.layout.simple_list_item_1, ExternalStorage.ITEM);
+        listView.setAdapter(arrayAdapter);
     }
 
     /**
@@ -243,5 +255,15 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return super.onTouchEvent(event);
+    }
+
+    public void openExternalStorage(MenuItem item) {
+        ExternalStorage externalStorage = new ExternalStorage();
+        externalStorage.displayExternalStorage();
+
+        if(ExternalStorage.ITEM == null)
+            Toast.makeText(this, "ITEM equal null", Toast.LENGTH_LONG).show();
+        else
+            Toast.makeText(this, "ITEM differ then null", Toast.LENGTH_LONG).show();
     }
 }
