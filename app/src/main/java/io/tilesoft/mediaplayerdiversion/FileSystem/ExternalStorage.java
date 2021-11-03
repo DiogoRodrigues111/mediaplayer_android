@@ -15,6 +15,14 @@ public class ExternalStorage {
 
     public static String[] ITEM = { };
 
+    /**
+     * Get access to <p><b>List View </b>.</p>
+     *
+     * And replace end formats extensions from files.
+     *
+     * @param file <p><b>Environment.getExternalStorageDirectory()</b></p>
+     * @return <p>ArrayList of File</p>
+     */
     public ArrayList<File> getStorageFiles(File file) {
         ArrayList<File> addInputArray = new ArrayList<>();
         File[] files = file.listFiles();
@@ -36,6 +44,11 @@ public class ExternalStorage {
         return addInputArray;
     }
 
+    /**
+     * It's to do showing list all files found in <p><b>External Storage</b>.</p>
+     *
+     * @param context <p>Context.getApplicationContext()</p>
+     */
     public void displayExternalStorage( Context context ) {
 
         ArrayList<File> displayRoutine = getStorageFiles (

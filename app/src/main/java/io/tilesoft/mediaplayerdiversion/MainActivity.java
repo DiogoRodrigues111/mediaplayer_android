@@ -260,6 +260,13 @@ public class MainActivity extends AppCompatActivity {
         return super.onTouchEvent(event);
     }
 
+    /**
+     * Open an new file system for chooser files.
+     *
+     * It is an simulation button <p>event</p> clink.
+     *
+     * @param item self
+     */
     public void openExternalStorage(MenuItem item) {
         final ExternalStorage externalStorage = new ExternalStorage();
 
