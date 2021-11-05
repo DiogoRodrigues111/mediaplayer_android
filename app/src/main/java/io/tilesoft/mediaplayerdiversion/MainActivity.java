@@ -40,8 +40,6 @@ import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.MediaController;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -56,30 +54,30 @@ import io.tilesoft.mediaplayerdiversion.VideoPlayer.Player;
 
 public class MainActivity extends AppCompatActivity {
 
+    private Player player;
+
+    // Be careful uses this public globals variables, that MainActivity
+    // on others classes.
     public String[] PERMISSIONS = new String[]{
             Manifest.permission.READ_EXTERNAL_STORAGE
     };
 
     public final int REQUEST_CODES = 1;
 
-    private Player player;
-
     public static Intent CHOOSER_PAGE;
 
-    // Be careful uses this public globals variables, that MainActivity
-    // on others classes.
     public MenuView.ItemView loop_button_nav;
     public VideoView videoView;
     public SeekBar sliderDuration;
     public MediaController mediaController;
     public TextView startText;
     public TextView endText;
-    public ListView listView;
+    //public ListView listView;
 
     public MenuView.ItemView play_button_nav;
     public BottomNavigationView nav_view;
 
-    public ArrayAdapter<String> arrayAdapter;
+    //public ArrayAdapter<String> arrayAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,12 +109,13 @@ public class MainActivity extends AppCompatActivity {
         sliderDuration = findViewById(R.id.seekbar_main);
         videoView = findViewById(R.id.video_view_main);
         mediaController = new MediaController(this);
+
         player = new Player(this, videoView, null, sliderDuration, startText, endText);
 
-        listView = findViewById(R.id.external_storage_view);
-        arrayAdapter = new ArrayAdapter<String>(this,
-               android.R.layout.simple_list_item_1, ExternalStorage.ITEM);
-        listView.setAdapter(arrayAdapter);
+        //listView = findViewById(R.id.external_storage_view);
+        //arrayAdapter = new ArrayAdapter<String>(this,
+        //       android.R.layout.simple_list_item_1, ExternalStorage.ITEM);
+        //listView.setAdapter(arrayAdapter);
     }
 
     /**
@@ -270,10 +269,9 @@ public class MainActivity extends AppCompatActivity {
     public void openExternalStorage(MenuItem item) {
         final ExternalStorage externalStorage = new ExternalStorage();
 
-        if(player.checkIfNotificationAccept(this, PackageManager.PERMISSION_GRANTED)) {
-            if(DebugOnly.DEBUG_ONLY == 1)
-                Toast.makeText(this, "Permission Granted to Sd Card", Toast.LENGTH_LONG).show();
-            externalStorage.displayExternalStorage( this );
+        if(DebugOnly.DEBUG_ONLY == 1) {
+            Toast.makeText(this, "Permission Granted to Sd Card", Toast.LENGTH_LONG).show();
+            externalStorage.displayExternalStorage(this);
         }
 
         if(DebugOnly.DEBUG_ONLY == 1) {

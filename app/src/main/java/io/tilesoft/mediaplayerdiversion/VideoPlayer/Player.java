@@ -21,7 +21,6 @@
 package io.tilesoft.mediaplayerdiversion.VideoPlayer;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -49,18 +48,44 @@ import io.tilesoft.mediaplayerdiversion.MainActivity;
 
 public class Player implements PlayerIntface {
 
-    // Be careful uses this public globals variables, that MainActivity
-    // on others classes.
-    @Deprecated() public static transient boolean canPlayVideo;
-    public VideoView videoView;
-    public MediaController mediaController;
-    public SeekBar slider;
     private double currentPos;
-    public Handler handler;
     private TextView startText;
     private TextView endText;
 
+    // Be careful uses this public globals variables, that MainActivity
+    // on others classes.
+    public static transient boolean canPlayVideo;
+    public VideoView videoView;
+    public MediaController mediaController;
+    public SeekBar slider;
+    public Handler handler;
+
+    public PlayerFunctionInfo playerFunctionInfo;
+
     public Context context;
+
+    /**
+     * Implementation of the an abstraction the Player for uses routines
+     *
+     * It's can uses how to do event's.
+     */
+    public class AbstractPlayerClass extends PlayerFunctionInfo {
+
+        @Override
+        public void onPlay() {
+            videoView.start();
+        }
+
+        @Override
+        public void onPause() {
+            videoView.pause();
+        }
+
+        @Override
+        public void onStop() {
+            videoView.stopPlayback();
+        }
+    }
 
     /**
      * Player constructor, In here keep holder all necessary component for create
@@ -144,6 +169,7 @@ public class Player implements PlayerIntface {
      * Open and send uri with file to video view
      * But it do not check if notification is accepted in <b>checkIfNotificationAccept</b>
      */
+    @Deprecated
     private void readFileFromSdCard() {
         File fp = Environment.getExternalStorageDirectory().getAbsoluteFile();
         Uri uri = Uri.fromFile(new File(fp.toURI()));
@@ -154,18 +180,21 @@ public class Player implements PlayerIntface {
      * Play <b>VideoView</b>
      */
     public void play() {
-        videoView.start();
+        AbstractPlayerClass abstractPlayerClass = new AbstractPlayerClass();
+        abstractPlayerClass.onPlay();
     }
 
     /**
      * Pause <b>VideoView</b>
      */
     public void pause() {
-        videoView.pause();
+        AbstractPlayerClass abstractPlayerClass = new AbstractPlayerClass();
+        abstractPlayerClass.onPause();
     }
 
     public void stop() {
-        videoView.pause();
+        AbstractPlayerClass abstractPlayerClass = new AbstractPlayerClass();
+        abstractPlayerClass.onStop();
     }
 
     /**
@@ -173,7 +202,8 @@ public class Player implements PlayerIntface {
      */
     @Deprecated
     public void noCheckAndPlay() {
-        videoView.start();
+        AbstractPlayerClass abstractPlayerClass = new AbstractPlayerClass();
+        abstractPlayerClass.onPlay();
     }
 
     /**
@@ -194,12 +224,13 @@ public class Player implements PlayerIntface {
      *
      * @param context self
      */
+    @Deprecated
     public void checkIfSelectionItWork(Context context) {
         initializeVideoViewForPlay(context.getApplicationContext());
         SelectedFile fp = new SelectedFile();
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         fp.checkIfSelectedFileInChooser(context.getApplicationContext(), intent);
-        //play();
+        play();
     }
 
     /**
@@ -355,8 +386,9 @@ public class Player implements PlayerIntface {
     /**
      * Make conversion of strings format.
      *
-     * @param tseq
+     * @param tseq self
      */
+    @Deprecated
     private void startLabel(int tseq) {
         startTimeConversion(tseq);
     }
@@ -364,8 +396,9 @@ public class Player implements PlayerIntface {
     /**
      * Make conversion of strings format.
      *
-     * @param tseq
+     * @param tseq self
      */
+    @Deprecated
     private void endLabel(int tseq) {
         endTimeConvertion(tseq);
     }
@@ -373,7 +406,7 @@ public class Player implements PlayerIntface {
     /**
      * Hide Visibility system
      *
-     * @param window  self
+     * @param window self
      */
     public void fullscreenHideVisibility(@NonNull MainActivity window) {
         View d = window.getWindow().getDecorView();

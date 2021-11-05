@@ -26,7 +26,7 @@
         android:id="@+id/nav_chooser_files"
         android:icon="@drawable/ic_folder_open_24"
         android:title="@string/nav_filechooser_string"
-        android:onClick="openExternalStorage"
+        android:onClick="FilesChooser_OnClick"
         />
     <item
         android:id="@+id/play"
