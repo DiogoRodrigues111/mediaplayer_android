@@ -75,4 +75,29 @@ public class ExternalStorage {
                         "External differ then null", Toast.LENGTH_LONG).show();
         }
     }
+
+    /**
+     * Get reader to external storage
+     *
+     * This take name files from location of referencable absolute path's.
+     *
+     * For example:
+     *
+     *  /storage/1F08-2107/
+     *  /storage/emulated/0
+     *  ...
+     *
+     * @return <p><b>Self file, but not array list</b></p>
+     */
+    public static File getFileLists( String absolutePath ) {
+
+        File file = new File( absolutePath );
+        File[] fi = file.listFiles();
+
+        for ( File iterator : fi ) {
+            System.out.println(iterator.getName());
+        }
+
+        return file;
+    }
 }
