@@ -2,8 +2,6 @@ package io.tilesoft.mediaplayerdiversion.FileSystem;
 
 import android.content.Context;
 import android.os.Environment;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -23,7 +21,9 @@ public class ExternalStorage {
      * @param file <p><b>Environment.getExternalStorageDirectory()</b></p>
      * @return <p>ArrayList of File</p>
      */
+    @Deprecated
     public ArrayList<File> getStorageFiles(File file) {
+
         ArrayList<File> addInputArray = new ArrayList<>();
         File[] files = file.listFiles();
 
@@ -49,6 +49,7 @@ public class ExternalStorage {
      *
      * @param context <p>Context.getApplicationContext()</p>
      */
+    @Deprecated
     public void displayExternalStorage( Context context ) {
 
         ArrayList<File> displayRoutine = getStorageFiles (
