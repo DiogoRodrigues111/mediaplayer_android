@@ -65,7 +65,7 @@ public class ExternalStorage {
 
         ITEM = item;
 
-        if(DebugOnly.DEBUG_ONLY == 1) {
+        if(!DebugOnly.DEBUG_ONLY) {
             if(ITEM == null)
                 Toast.makeText(
                         context.getApplicationContext(), "External equal null", Toast.LENGTH_LONG)

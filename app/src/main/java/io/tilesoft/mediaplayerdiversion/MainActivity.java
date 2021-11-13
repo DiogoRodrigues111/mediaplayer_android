@@ -20,6 +20,7 @@
 
 package io.tilesoft.mediaplayerdiversion;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuView;
@@ -77,19 +78,18 @@ public class MainActivity extends AppCompatActivity {
     public MediaController mediaController;
     public TextView startText;
     public TextView endText;
-    public ListView listView;
 
     public MenuView.ItemView play_button_nav;
     public BottomNavigationView nav_view;
 
-    public ArrayAdapter<String> arrayAdapter;
+    public ListView listView;
+
+    //public ArrayAdapter<String> arrayAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        DebugOnly.DEBUG_ONLY = 0;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(MainActivity.this,
@@ -118,9 +118,9 @@ public class MainActivity extends AppCompatActivity {
         player = new Player(this, videoView, null, sliderDuration, startText, endText);
 
         listView = findViewById(R.id.external_storage_view);
-        arrayAdapter = new ArrayAdapter<String>(this,
-               android.R.layout.simple_list_item_1, ExternalStorage.ITEM);
-        listView.setAdapter(arrayAdapter);
+        //arrayAdapter = new ArrayAdapter<String>(this,
+        //       android.R.layout.simple_list_item_1, ExternalStorage.ITEM);
+        //listView.setAdapter(arrayAdapter);
     }
 
     /**
@@ -264,6 +264,16 @@ public class MainActivity extends AppCompatActivity {
         return super.onTouchEvent(event);
     }
 
+    @NonNull
+    private Intent getExternalSdCardFileSystem() {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.putExtra("external_sdcard", R.layout.list_view_storage);
+        intent.setType("*/*");
+
+        startActivity(intent);
+        return intent;
+    }
+
     /**
      * Open an new file system for chooser files.
      *
@@ -272,8 +282,7 @@ public class MainActivity extends AppCompatActivity {
      * @param item self
      */
     public void openExternalStorage(MenuItem item) {
-
-        File file = ExternalStorage.getFileLists("/storage/1F08-2107/Videos");
-
+        //File file = ExternalStorage.getFileLists("/storage/1F08-2107/Videos");
+        getExternalSdCardFileSystem();
     }
 }

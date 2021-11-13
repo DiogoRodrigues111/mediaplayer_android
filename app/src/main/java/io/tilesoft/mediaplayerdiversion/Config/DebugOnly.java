@@ -10,5 +10,5 @@ public class DebugOnly {
      *
      * <p><b>It's is default mode it activated (ON, One)</b>.</p>
      */
-    public static short DEBUG_ONLY = 1;   // ON, 1
+    public static boolean DEBUG_ONLY = false;   // ON, 1
 }
