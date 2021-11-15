@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        switch (requestCode) {
+        switch ( requestCode ) {
             case REQUEST_CODES:
                 if (resultCode == RESULT_OK) {
                     if (data != null) {
@@ -137,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
 
                         try {
                             player.getVideoViewPath(getData);
+                            player.getAllMessage( getData.getPath() );
                         } catch (Exception fileSelect_ex) {
                             fileSelect_ex.printStackTrace();
                         }

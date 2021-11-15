@@ -29,6 +29,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.MediaController;
@@ -43,6 +44,7 @@ import androidx.core.content.ContextCompat;
 
 import java.io.File;
 
+import io.tilesoft.mediaplayerdiversion.FileSystem.ExternalStorage;
 import io.tilesoft.mediaplayerdiversion.FileSystem.SelectedFile;
 import io.tilesoft.mediaplayerdiversion.MainActivity;
 
@@ -436,5 +438,33 @@ public class Player implements PlayerIntface {
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
 
         );
+    }
+
+    /**
+     * Show only message log
+     *
+     * @param msg <p>String returns</p>
+     * @return <b>self message String</b>
+     */
+    @NonNull
+    public String showMessageLog(String msg) {
+        Log.println(Log.INFO, "TAG In Execution:", msg);
+        return msg;
+    }
+
+    /**
+     * Get message tag in <p><b>ShowMessageLog</b></p>,
+     * together with new message to <p>ExternalStorage Class.</p>
+     *
+     * It too add an new message for your listen media file.
+     *
+     * @param msg self <p>msg</p>
+     */
+    public void getAllMessage( String msg ) {
+        // Show tag info.
+        ExternalStorage.getFileLists( msg + " ");
+
+        // What's listen on your media file.
+        showMessageLog(" " + msg);
     }
 }
