@@ -25,6 +25,8 @@ import android.content.Context;
 import android.os.Environment;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import java.io.File;
 import java.util.ArrayList;
 
@@ -111,6 +113,7 @@ public class ExternalStorage {
      *
      * @return <p><b>Self file, but not array list</b></p>
      */
+    @NonNull
     public static File getFileLists( String absolutePath ) {
 
         File file = new File( absolutePath );

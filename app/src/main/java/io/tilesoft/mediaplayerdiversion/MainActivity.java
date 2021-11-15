@@ -135,6 +135,8 @@ public class MainActivity extends AppCompatActivity {
 
                         Uri getData = data.getData();
 
+                        player.informWhileUserPlaying(this, getData.getPath());
+
                         try {
                             player.getVideoViewPath(getData);
                             player.getAllMessage( getData.getPath() );

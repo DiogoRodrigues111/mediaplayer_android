@@ -35,6 +35,7 @@ import android.view.View;
 import android.widget.MediaController;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
@@ -446,10 +447,48 @@ public class Player implements PlayerIntface {
      * @param msg <p>String returns</p>
      * @return <b>self message String</b>
      */
-    @NonNull
+    @Nullable
+    @Deprecated
     public String showMessageLog(String msg) {
-        Log.println(Log.INFO, "TAG In Execution:", msg);
+        Log.i("You listen of ", msg);
         return msg;
+    }
+
+    /**
+     * An Reader file from external code, but never uses this.
+     *
+     * <b>Uses ExternalStorage for more example.</b>
+     *
+     * @param filename <p>Self</p>
+     * @return <p>Print an message to console terminal.</p>
+     */
+    @Nullable
+    @Deprecated
+    public String getFileNameToExternal(String filename) {
+        return showMessageLog(" " + filename);
+    }
+
+    /**
+     * Get an TAG only for terminal console.
+     *
+     * @param tagMsg <p>It's is a TAG</p>
+     * @return <p>Returns an <b>Log.i</b></p>
+     */
+    @Nullable
+    @Deprecated
+    public String getMessageLogOnlyForTag(@Nullable String tagMsg) {
+        tagMsg = "You listen: ";
+        return showMessageLog( tagMsg + " " );
+    }
+
+    /**
+     * Get an <p>Toast</p> for make the message show.
+     *
+     * @param context <p>getApplicationContext.</p>
+     * @param msg <p>Is self file name.</p>
+     */
+    public void getMessageToListen(@NonNull Context context, @NonNull String msg) {
+        Toast.makeText(context.getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -458,13 +497,20 @@ public class Player implements PlayerIntface {
      *
      * It too add an new message for your listen media file.
      *
-     * @param msg self <p>msg</p>
+     * @param filename self <p>File name from path.</p>
      */
-    public void getAllMessage( String msg ) {
-        // Show tag info.
-        ExternalStorage.getFileLists( msg + " ");
+    public void getAllMessage( @Nullable String filename )
+            throws NullPointerException {
+        ExternalStorage.getFileLists( filename );
+    }
 
-        // What's listen on your media file.
-        showMessageLog(" " + msg);
+    /**
+     * Inform to media player which file is on reproduction.
+     *
+     * @param context <p>getApplicationContext.</p>
+     * @param msg <p>Self message from file name.</p>
+     */
+    public void informWhileUserPlaying( @NonNull Context context, @NonNull String msg ) {
+        getMessageToListen( context.getApplicationContext(), msg );
     }
 }
