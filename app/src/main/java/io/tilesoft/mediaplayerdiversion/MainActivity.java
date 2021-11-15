@@ -55,7 +55,6 @@ import java.io.File;
 
 import io.tilesoft.mediaplayerdiversion.Config.DebugOnly;
 import io.tilesoft.mediaplayerdiversion.FileSystem.ExternalStorage;
-import io.tilesoft.mediaplayerdiversion.Lists.RecycleItemList;
 import io.tilesoft.mediaplayerdiversion.VideoPlayer.Player;
 
 public class MainActivity extends AppCompatActivity {
@@ -81,10 +80,6 @@ public class MainActivity extends AppCompatActivity {
 
     public MenuView.ItemView play_button_nav;
     public BottomNavigationView nav_view;
-
-    public ListView listView;
-
-    //public ArrayAdapter<String> arrayAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,11 +111,6 @@ public class MainActivity extends AppCompatActivity {
         mediaController = new MediaController(this);
 
         player = new Player(this, videoView, null, sliderDuration, startText, endText);
-
-        listView = findViewById(R.id.external_storage_view);
-        //arrayAdapter = new ArrayAdapter<String>(this,
-        //       android.R.layout.simple_list_item_1, ExternalStorage.ITEM);
-        //listView.setAdapter(arrayAdapter);
     }
 
     /**
@@ -264,16 +254,6 @@ public class MainActivity extends AppCompatActivity {
         return super.onTouchEvent(event);
     }
 
-    @NonNull
-    private Intent getExternalSdCardFileSystem() {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.putExtra("external_sdcard", R.layout.list_view_storage);
-        intent.setType("*/*");
-
-        startActivity(intent);
-        return intent;
-    }
-
     /**
      * Open an new file system for chooser files.
      *
@@ -281,8 +261,7 @@ public class MainActivity extends AppCompatActivity {
      *
      * @param item self
      */
+    @Deprecated
     public void openExternalStorage(MenuItem item) {
-        //File file = ExternalStorage.getFileLists("/storage/1F08-2107/Videos");
-        getExternalSdCardFileSystem();
     }
 }
