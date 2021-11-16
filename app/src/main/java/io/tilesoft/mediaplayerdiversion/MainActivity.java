@@ -275,10 +275,8 @@ public class MainActivity extends AppCompatActivity {
         super.onConfigurationChanged(newConfig);
 
         if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            Toast.makeText(this, "LANDSCAPE", Toast.LENGTH_LONG).show();
             player.play();
         } else if(newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            Toast.makeText(this, "PORTRAIT", Toast.LENGTH_LONG).show();
             player.play();
         }
     }
