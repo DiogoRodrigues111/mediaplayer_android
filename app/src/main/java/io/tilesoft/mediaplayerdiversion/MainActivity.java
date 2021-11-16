@@ -31,7 +31,6 @@ import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
@@ -43,8 +42,6 @@ import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.MediaController;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -53,10 +50,6 @@ import android.widget.VideoView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.io.File;
-
-import io.tilesoft.mediaplayerdiversion.Config.DebugOnly;
-import io.tilesoft.mediaplayerdiversion.FileSystem.ExternalStorage;
 import io.tilesoft.mediaplayerdiversion.VideoPlayer.Player;
 
 public class MainActivity extends AppCompatActivity {
@@ -130,25 +123,24 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        switch ( requestCode ) {
-            case REQUEST_CODES:
-                if (resultCode == RESULT_OK) {
-                    if (data != null) {
+        if (requestCode == REQUEST_CODES) {
+            if (resultCode == RESULT_OK) {
+                if (data != null) {
 
-                        Uri getData = data.getData();
+                    Uri getData = data.getData();
 
-                        player.informWhileUserPlaying(this, getData.getPath());
+                    player.informWhileUserPlaying(this, getData.getPath());
 
-                        try {
-                            player.getVideoViewPath(getData);
-                            player.getAllMessage( getData.getPath() );
-                        } catch (Exception fileSelect_ex) {
-                            fileSelect_ex.printStackTrace();
-                        }
+                    try {
+                        player.getVideoViewPath(getData);
+                        player.getAllMessage(getData.getPath());
+                    } catch (Exception fileSelect_ex) {
+                        fileSelect_ex.printStackTrace();
                     }
                 }
-                break;
+            }
         }
+
     }
 
     /**
@@ -174,6 +166,7 @@ public class MainActivity extends AppCompatActivity {
      *                                 MediaStore.Video.Thumbnails.MINI_KIND);</b>
      *
      */
+    @Deprecated
     @Nullable
     private Drawable getVideoThumbnails() throws RuntimeException {
         final int videoId = MediaStore.Video.Thumbnails.MICRO_KIND;
@@ -270,6 +263,11 @@ public class MainActivity extends AppCompatActivity {
     public void openExternalStorage(MenuItem item) {
     }
 
+    /**
+     * Returns configuration of orientation to screen.
+     *
+     * @param newConfig <p>enum: screen orientation</p>
+     */
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
